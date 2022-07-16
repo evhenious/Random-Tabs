@@ -1,13 +1,6 @@
-const CONSOLE_TITLE_STYLES = [
-  'color:darkorange',
-  'font-size: 14px;',
-  'text-decoration: underline;'
-].join(';');
+import { initLesson } from './config.js';
 
-document.getElementById('lesson-title').innerText = 'JS Lesson 04';
-console.log('# %c Модуль 2. Заняття 4. Функції.', CONSOLE_TITLE_STYLES);
-
-
+initLesson('JS Lesson 04', 'Модуль 2. Заняття 4. Функції.');
 
 //? ----------------------------------------------- питання з таблиці-----------------
 

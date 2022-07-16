@@ -1,5 +1,6 @@
-document.getElementById('lesson-title').innerText = 'JS Lesson 01';
-console.log('# Модуль 1. Заняття 1. Змінні, типи, оператори');
+import { initLesson } from './config.js';
+
+initLesson('JS Lesson 01', 'Модуль 1. Заняття 1. Змінні, типи, оператори.');
 //--------------------------------------------------------------------------------
 
 
