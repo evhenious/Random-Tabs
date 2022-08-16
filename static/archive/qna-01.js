@@ -1,4 +1,4 @@
-import { initLesson } from './config.js';
+import { initLesson } from '../config.js';
 
 initLesson('JS Q&A Session 01', 'Q&A по всіх темах з модулів 1 - 5.');
 
