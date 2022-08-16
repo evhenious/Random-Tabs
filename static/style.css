@@ -13,3 +13,9 @@ h1 {
 .list-item:hover {
   text-decoration: underline
 }
+
+button.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
