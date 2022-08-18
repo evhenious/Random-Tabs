@@ -9,6 +9,9 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-debugger":"warn",
+    "no-var":"error",
+    "no-unused-vars":"warn",
     "semi":"warn"
   }
 }

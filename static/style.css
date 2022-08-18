@@ -11,11 +11,67 @@ h1 {
 }
 
 .list-item:hover {
-  text-decoration: underline
+  text-decoration: underline;
 }
 
-button.btn {
+.btn-label {
+  margin: 0 5px;
+}
+
+.green-bg {
+  background-color: rgb(65, 200, 29, 0.17);
+}
+
+.red-bg {
+  background-color: rgba(223, 65, 21, 0.301);
+}
+
+/* lesson-12 */
+
+.register-form {
+  border: 2px solid lightgrey;
+  border-radius: 5px;
+  padding: 5px;
+  max-width: fit-content;
+  min-width: fit-content;
+  margin: 10px 0;
+}
+
+p#keylog > * {
+  margin: 0 2px;
+}
+
+kbd {
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+  color: #333;
+  display: inline-block;
+  font-size: 0.85em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
+}
+
+#pizza-root .items {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#pizza-root .items * {
+  margin: 5px;
+}
+
+.pizza-item {
+  width: 120px;
+  height: 120px;
+  background-image: url('/images/pizza.jpeg');
+  border: 1px solid grey;
+}
+
+.focused {
+  border: 3px solid green;
 }
