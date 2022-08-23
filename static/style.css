@@ -75,3 +75,28 @@ kbd {
 .focused {
   border: 3px solid green;
 }
+
+/* lesson 13 */
+
+.header {
+  width: 100%;
+  border: none;
+  background-color: #dedede;
+  cursor: pointer;
+}
+
+.content {
+  border-bottom: 1px solid darkgrey;
+  padding: 10px 0;
+  background-color: #eeeeee;
+
+  display: none;
+}
+
+.active {
+  background-color: #c4c4c4;
+}
+
+.visible {
+  display: block;
+}
