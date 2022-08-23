@@ -4,6 +4,30 @@ initLesson('JS Lesson 13', 'Модуль 7. Заняття 13. Event Propagation
 
 
 
+
+//? що таке console.log.bind(console) ?
+
+// setTimeout(console.log, 1_000, 'test log');
+
+// const { log } = console;
+// setTimeout(log, 1_000, 'test log works?');
+
+// const myLog = console.log;
+// setTimeout(myLog, 1_000, 'test log works again and again');
+
+
+// після підключення ліби через cdn, функціонал став доступний у вигляді глобала (так само як console, alert...)
+const modal = basicLightbox.create(`
+    <div class="modal">
+        <p>
+            Your first lightbox with just a few lines of code.
+            Yes, it's really that simple.
+        </p>
+    </div>
+`)
+
+
+
 //? events for select [change, focus] --------------------------------------------
 /*
   приклад на делегування подій з попереднього заняття
@@ -56,16 +80,41 @@ class PizzaMenu {
       div.setAttribute('id', pizzaId);
       div.innerText = item;
 
-      // event handler
       div.addEventListener('click', (event) => {
-        const { id } = event.target;
-        this.#pizzaSelect.value = id;
+        // console.log('pizza clicked!');
+        // event.stopPropagation();
 
-        this.#clearFocus();
-        event.target.classList.add('focused');
+        // event.stopImmediatePropagation();
+        modal.show(); // <-- показуємо нашу модалку _basicLightbox_
       });
 
+      // div.addEventListener('click', (event) => {
+      //   console.log('click handler #2');
+      // });
+
+      //! v1 event handler - one handler per one pizza
+      // div.addEventListener('click', (event) => {
+      //   const { id } = event.target;
+      //   this.#pizzaSelect.value = id;
+
+      //   this.#clearFocus();
+      //   event.target.classList.add('focused');
+      // });
+
       return div;
+    });
+
+    //! v2 delegation
+    this.#pizzaPics.addEventListener('click', (event) => {
+      if (!event.target.classList.value.includes('pizza-item')) return;
+
+      console.log('div with pizzas clicked!');
+
+      const { id } = event.target;
+      this.#pizzaSelect.value = id;
+
+      this.#clearFocus();
+      event.target.classList.add('focused');
     });
 
     this.#pizzaPics.append(...pizzas);
@@ -78,6 +127,7 @@ class PizzaMenu {
   render(rootId = '') {
     document.getElementById(rootId).append(this.#pizzaSelect, this.#pizzaPics);
 
+    //! adding event handler for _SELECT_ element
     this.#pizzaSelect.addEventListener('change', (event) => {
       const { value: selectedItem } = event.target;
 
@@ -101,6 +151,9 @@ const pizzaMenu = new PizzaMenu(items);
 pizzaMenu.render('pizza-root');
 
 
+//? z-index, position ? +
+
+//? stopPropagation vs stopImmediatePropagation ?
 
 
 
@@ -109,21 +162,23 @@ pizzaMenu.render('pizza-root');
 
 
 
-function createBoxes(number) {
-  const divElts = document.querySelector("#boxes");
 
-  const divs = [];
-  for (let i = 0, size = 30; i < number; i++, size += 10) {
-    const div = document.createElement("div");
-    div.style.backgroundColor = 'darkgrey';
-    div.classList.add("box");
-    div.style.height = `${size}px`;
-    div.style.width = `${size}px`;
 
-    divs.push(div);
-  }
 
-  divElts.append(...divs);
-}
 
-createBoxes(3);
+//? accordion --------------------------------------------------------------------
+// const accordionRoot = document.querySelector('#accordion');
+// const accordionRoot = document.getElementById('accordion');
+// accordionRoot.addEventListener('click', (event) => {
+//   // зняти опціональні класи з усіх
+//   document.querySelector('.active')?.classList?.remove('active');
+//   document.querySelector('.visible')?.classList?.remove('visible');
+
+
+//   const btn = event.target;
+//   btn.classList.toggle('active');
+//   btn.nextElementSibling.classList.toggle('visible');
+// });
+
+
+
