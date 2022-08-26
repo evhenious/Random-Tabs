@@ -100,3 +100,28 @@ kbd {
 .visible {
   display: block;
 }
+
+/* lesson 14 */
+
+#gallery {
+  height: 350px;
+  width: 350px;
+  /* overflow-y: auto; */
+  /* overflow-x: hidden; */
+}
+
+.gallery-item {
+  width: inherit;
+}
+
+.progress-container {
+  height: 5px;
+  position: fixed;
+  top: 0px;
+  transition: 0.2s;
+}
+
+.progress-bar{
+  height: 5px;
+  background-color: rgb(189, 19, 19);
+}
