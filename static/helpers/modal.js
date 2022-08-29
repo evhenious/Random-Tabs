@@ -1,7 +1,7 @@
 let modalInstance = null;
 
 /**
- * @returns Object basicLightbox modalInstance
+ * @returns {Object} basicLightbox modalInstance
  */
 export function initModal() {
   // assuming basicLightbox is available globally
