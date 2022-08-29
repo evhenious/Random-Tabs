@@ -1,0 +1,11 @@
+.progress-container {
+  height: 5px;
+  position: fixed;
+  top: 0px;
+  transition: 0.2s;
+}
+
+.progress-bar{
+  height: 5px;
+  background-color: rgb(189, 19, 19);
+}

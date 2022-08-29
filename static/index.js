@@ -1,10 +1,11 @@
-import { initLesson } from './config.js';
+import { initLesson } from './helpers/consoleConfig.js';
+
 import Gallery from './helpers/gallery.js';
-import { galleryItems } from './helpers/images.js';
+import { galleryItems } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
 import ProgressBar from './helpers/progressBar.js';
 
-initLesson('JS Lesson 15', 'Модуль 8. Модульність коду.');
+initLesson('JS Lesson 15', 'Модульність коду. Bundlers');
 
 const modalInstance = initModal();
 const galleryOptions = {
@@ -34,7 +35,9 @@ window.addEventListener('scroll', _.throttle(() => {
  * @returns {number}
  */
 function getProgressLength() {
-  const { clientHeight, scrollHeight } = document.body;
-  const maxScroll = scrollHeight - clientHeight;
-  return (window.scrollY * 100) / maxScroll;
+  const { scrollY, innerHeight } = window;
+  const { scrollHeight } = document.body;
+  const scrollPercent = scrollY / (scrollHeight - innerHeight);
+
+  return Math.round(scrollPercent * 100);
 }

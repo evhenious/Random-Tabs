@@ -1,0 +1,8 @@
+#gallery {
+  height: 350px;
+  width: 350px;
+}
+
+.gallery-item {
+  width: inherit;
+}
