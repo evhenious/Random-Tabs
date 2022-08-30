@@ -1,7 +1,7 @@
 import { initLesson } from './helpers/consoleConfig.js';
 
 import Gallery from './helpers/gallery.js';
-import { galleryItems } from './helpers/imagesConfig.js';
+import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
 import ProgressBar from './helpers/progressBar.js';
 
@@ -13,7 +13,7 @@ const galleryOptions = {
   placeholder: '/images/empty.png',
 };
 
-const gallery = new Gallery('#gallery', galleryItems, galleryOptions);
+const gallery = new Gallery('#gallery', shuffle(galleryItems), galleryOptions);
 gallery.addClickHandler(handleClickOnImage);
 
 /**

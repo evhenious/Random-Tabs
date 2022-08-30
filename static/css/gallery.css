@@ -1,6 +1,7 @@
 #gallery {
   height: 350px;
   width: 350px;
+  margin:auto;
 }
 
 .gallery-item {
