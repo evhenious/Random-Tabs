@@ -1,9 +1,11 @@
+import * as basicLightbox from 'basiclightbox';
+
 let modalInstance = null;
 
 /**
  * @returns {Object} basicLightbox modalInstance
  */
-export function initModal() {
+function initModal() {
   // assuming basicLightbox is available globally
   if (!basicLightbox) {
     console.warn('basicLightbox is not available');
@@ -21,7 +23,13 @@ export function initModal() {
   return modalInstance;
 }
 
-export function setModalImage(src = '') {
+function setModalImage(src = '') {
   const imageInsideModal = modalInstance.element().querySelector('.modal>img');
   imageInsideModal.src = src;
+}
+
+
+export {
+  initModal,
+  setModalImage
 }

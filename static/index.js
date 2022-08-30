@@ -1,3 +1,6 @@
+import { throttle } from 'lodash';
+import 'lazysizes';
+
 import { initLesson } from './helpers/consoleConfig.js';
 
 import Gallery from './helpers/gallery.js';
@@ -26,7 +29,7 @@ function handleClickOnImage({ target }) {
 }
 
 const progressBar = new ProgressBar('progress');
-window.addEventListener('scroll', _.throttle(() => {
+window.addEventListener('scroll', throttle(() => {
   progressBar.setLength(getProgressLength());
 }, 120));
 
