@@ -1,4 +1,4 @@
-import { initLesson } from './config.js';
+import { initLesson } from '../config.js';
 
 initLesson('JS Lesson 12', 'Модуль 6. Заняття 12. Events.');
 

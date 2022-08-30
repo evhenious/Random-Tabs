@@ -1,4 +1,4 @@
-export const galleryItems = [
+const galleryItems = [
   {
     preview: 'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825__340.jpg',
     original: 'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825_1280.jpg',
@@ -45,3 +45,23 @@ export const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+/**
+ * Returns randomly shuffled copy of the incoming array
+ * @param {Object[]} incomingArray
+ */
+function shuffle(incomingArray) {
+  const array = [...incomingArray];
+  for (let i = 0; i < array.length; i += 1) {
+    const randomIndex = Math.floor(Math.random() * i);
+    // Swap it with the current element.
+    [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+  }
+
+  return array;
+}
+
+export {
+  galleryItems,
+  shuffle
+}

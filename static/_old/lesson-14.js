@@ -1,4 +1,4 @@
-import { initLesson } from './config.js';
+import { initLesson } from '../config.js';
 import { galleryItems } from './l-14/images.js';
 import { initModal, setModalImage } from './l-14/modal.js';
 

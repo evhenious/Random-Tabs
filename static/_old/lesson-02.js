@@ -1,4 +1,4 @@
-import { initLesson } from './config.js';
+import { initLesson } from './config.js.js';
 
 initLesson('JS Lesson 02', 'Модуль 1. Заняття 2. Розгалудження. Цикли. Область видимості змінних.');
 

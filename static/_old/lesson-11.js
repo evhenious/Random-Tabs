@@ -1,4 +1,4 @@
-import { initLesson } from './config.js';
+import { initLesson } from '../config.js';
 
 initLesson('JS Lesson 11', 'Модуль 6. Заняття 11. DOM.');
 

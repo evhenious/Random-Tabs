@@ -1,0 +1,35 @@
+{
+  "name": "fson55_training",
+  "version": "1.0.0",
+  "description": "Test stuff",
+  "main": "index.js",
+  "scripts": {
+    "copy-assets": "mkdir -p ./dist && cp -r ./images ./dist/images && cp ./static/index.html ./dist/index.html",
+    "build-js": "esbuild ./static/index.js --bundle --minify --outdir=./dist ",
+    "build-css": "esbuild ./static/root.css --bundle --minify --outfile=./dist/root.css",
+    "build": "npm run copy-assets && npm run build-js && npm run build-css",
+    "build-serve-dev": "esbuild index=./static/index.js root=./static/root.css --bundle --outdir=./dist --minify --sourcemap --servedir=./dist",
+    "start-dev": "npm run copy-assets && npm run build-serve-dev",
+    "start-dev-parcel": "npx parcel ./static/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evhenious/FSon55_training.git"
+  },
+  "author": "evhenious",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/evhenious/FSon55_training/issues"
+  },
+  "homepage": "https://github.com/evhenious/FSon55_training#readme",
+  "devDependencies": {
+    "@types/basiclightbox": "^5.0.1",
+    "esbuild": "^0.15.6",
+    "parcel": "^2.7.0"
+  },
+  "dependencies": {
+    "basiclightbox": "^5.0.4",
+    "lazysizes": "^5.3.2",
+    "lodash": "^4.17.21"
+  }
+}

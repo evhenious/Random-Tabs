@@ -1,0 +1,14 @@
+
+esbuild
+
+esbuild %entrypoint% --bundle --outdir=%folder_path% | --outfile=%file_path%
+  зібрати проект починаючи з точки входу, результат покласти в заданий кататог чи файл
+
+--minify
+  збирати код в режимі мініфікації
+
+--sourcemap
+  додати sourcemaps
+
+--servedir=%folder_path%
+  запустити дев сервер в заданому каталозі
