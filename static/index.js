@@ -7,8 +7,9 @@ import Gallery from './helpers/gallery.js';
 import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
 import ProgressBar from './helpers/progressBar.js';
+import Blog from './helpers/blog.js';
 
-initLesson('JS Lesson 15', 'Модульність коду. Bundlers');
+initLesson('JS Lesson 16', 'Local Storage, Session Storage');
 
 const modalInstance = initModal();
 const galleryOptions = {
@@ -44,3 +45,5 @@ function getProgressLength() {
 
   return Math.round(scrollPercent * 100);
 }
+
+const blog = new Blog('lesson-title');

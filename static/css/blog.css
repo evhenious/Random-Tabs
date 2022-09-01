@@ -1,0 +1,31 @@
+form {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 5px 5px 5px;
+  padding-bottom: 1em;
+  border-bottom: 1px solid lightgrey;
+  margin-bottom: 1em;
+}
+
+form * {
+  margin: 0 10px;
+}
+
+#posts > div {
+  width: 100%;
+  max-height: 100px;
+  overflow-y: scroll;
+  padding: 0 15px;
+  font-family: monospace;
+}
+
+.post {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.text-input {
+  flex: 1;
+  max-width: 520px;
+}

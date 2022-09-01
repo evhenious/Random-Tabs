@@ -1,9 +1,13 @@
 #gallery {
-  height: 350px;
-  width: 350px;
-  margin:auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .gallery-item {
-  width: inherit;
+  height: 330px;
+  width: 330px;
+  margin: 5px;
+  object-fit: cover;
 }
