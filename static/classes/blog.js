@@ -1,3 +1,4 @@
+import { debounce } from '../helpers/lodashHandmade';
 import { clearData, getData, saveData } from '../helpers/storage';
 
 const defaultInputPlaceholder = 'Enter your notes...';
@@ -26,6 +27,14 @@ class Blog {
     this.#text.placeholder = defaultInputPlaceholder;
     this.#text.addEventListener('blur', this.#resetTextInputStatus.bind(this));
 
+    // не даємо виконувати івент хендлер поки не пройде час після останнього виконання
+    const timeToDebaunce = 1000; // 1 second
+    const debouncedFunc = debounce((event) => {
+      console.log(event.target.value);
+    }, timeToDebaunce);
+    this.#text.addEventListener('input', debouncedFunc);
+
+
     // місце для додавання збережених постів
     this.#content = document.createElement('div');
 
@@ -49,6 +58,13 @@ class Blog {
 
       const isTextValid = this.#validateTextInput();
       if (!isTextValid) {
+        this.#text.placeholder = 'Field cannot be empty';
+
+        setTimeout(() => {
+          this.#resetTextInputStatus();
+          this.#text.placeholder = defaultInputPlaceholder;
+        }, 3_000);
+
         return;
       }
 
