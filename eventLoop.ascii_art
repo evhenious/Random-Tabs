@@ -1,0 +1,29 @@
+
+                                             First In - First Out
+            event loop                                |
+                                                      |
+  --------------->---------------                     V
+  |                             |       |  task queue -------------|
+  |                             |       |                          |
+  |      JS doing nothing,      |       |                          |
+  ^                             | <-----|         -empty-          |
+  |      waiting for events     V       |                          |
+  |                             |       |                          |
+  |                             |       |                          |
+  ---------------<---------------       ----------------------------
+
+
+
+
+                                             First In - First Out
+            event loop                                |
+                                                      |
+  --------------->---------------                     V
+  |                             |       |  task queue -------------|
+  |                             |       |  - script loads          |
+  |     JS processing tasks     |       |  - mouse clicks          |
+  ^                             | <-----|  - other event handlers  |
+  |     in order they appear    V       |                          |
+  |           in queue          |       |  - resolved timers       |
+  |                             |       |                          |
+  ---------------<---------------       ----------------------------
