@@ -1,6 +1,6 @@
 form {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   padding: 10px 5px 5px 5px;
   padding-bottom: 1em;
   border-bottom: 1px solid lightgrey;
@@ -9,6 +9,7 @@ form {
 
 form * {
   margin: 0 10px;
+  font-size: larger;
 }
 
 #posts > div {
