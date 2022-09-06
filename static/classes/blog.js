@@ -1,4 +1,7 @@
-import { clearData, getData, saveData } from './storage';
+import { debounce } from '../helpers/lodashHandmade';
+import { clearData, getData, saveData } from '../helpers/storage';
+
+const defaultInputPlaceholder = 'Enter your notes...';
 
 class Blog {
   #postsRoot;
@@ -17,9 +20,20 @@ class Blog {
 
     this.#date = document.createElement('input');
     this.#date.setAttribute('type', 'date');
+    this.#date.defaultValue = new Date().toISOString().slice(0, 10);
 
     this.#text = document.createElement('input');
     this.#text.classList.add('text-input');
+    this.#text.placeholder = defaultInputPlaceholder;
+    this.#text.addEventListener('blur', this.#resetTextInputStatus.bind(this));
+
+    // не даємо виконувати івент хендлер поки не пройде час після останнього виконання
+    const timeToDebaunce = 1000; // 1 second
+    const debouncedFunc = debounce((event) => {
+      console.log(event.target.value);
+    }, timeToDebaunce);
+    this.#text.addEventListener('input', debouncedFunc);
+
 
     // місце для додавання збережених постів
     this.#content = document.createElement('div');
@@ -42,17 +56,21 @@ class Blog {
     const handleSubmit = (event) => {
       event.preventDefault();
 
-      // а ще краще якби прикрутити валідацю і не давати натиснути Enter на пустій строчці
-      if (!this.#text.value) {
-        console.warn('empty input');
+      const isTextValid = this.#validateTextInput();
+      if (!isTextValid) {
+        this.#text.placeholder = 'Field cannot be empty';
+
+        setTimeout(() => {
+          this.#resetTextInputStatus();
+          this.#text.placeholder = defaultInputPlaceholder;
+        }, 3_000);
+
         return;
       }
 
-      const defaultDate = new Date().toISOString().slice(0, 10);
-
       const newPost = {
-        date: this.#date.value || defaultDate,
-        content: this.#text.value
+        date: this.#date.value,
+        content: this.#text.value,
       };
       this.#blogPosts.push(newPost);
       saveData(this.#blogPosts);
@@ -76,6 +94,25 @@ class Blog {
     });
 
     this.#content.replaceChildren(...preparedDivs);
+  }
+
+  #resetTextInputStatus() {
+    this.#text.classList.remove('invalid');
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  #validateTextInput() {
+    let isValid = true;
+
+    if (!this.#text.value) {
+      this.#text.classList.add('invalid');
+      console.warn('empty input');
+      isValid = false;
+    }
+
+    return isValid;
   }
 }
 

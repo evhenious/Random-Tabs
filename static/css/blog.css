@@ -1,6 +1,6 @@
 form {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   padding: 10px 5px 5px 5px;
   padding-bottom: 1em;
   border-bottom: 1px solid lightgrey;
@@ -9,6 +9,7 @@ form {
 
 form * {
   margin: 0 10px;
+  font-size: larger;
 }
 
 #posts > div {
@@ -17,6 +18,7 @@ form * {
   overflow-y: scroll;
   padding: 0 15px;
   font-family: monospace;
+  font-size: larger;
 }
 
 .post {
@@ -28,4 +30,9 @@ form * {
 .text-input {
   flex: 1;
   max-width: 520px;
+}
+
+.invalid {
+  border: 2px solid rgb(189, 19, 19);
+  background-color: rgba(189, 19, 19, 0.2);
 }
