@@ -17,6 +17,7 @@ form * {
   overflow-y: scroll;
   padding: 0 15px;
   font-family: monospace;
+  font-size: larger;
 }
 
 .post {

@@ -1,15 +1,15 @@
-import { throttle } from 'lodash';
 import 'lazysizes';
+import { throttle } from 'lodash';
 
 import { initLesson } from './helpers/consoleConfig.js';
 
-import Gallery from './helpers/gallery.js';
+import Blog from './classes/blog.js';
+import Gallery from './classes/gallery.js';
+import ProgressBar from './classes/progressBar.js';
 import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
-import ProgressBar from './helpers/progressBar.js';
-import Blog from './helpers/blog.js';
 
-initLesson('JS Lesson 16', 'Local Storage, Session Storage');
+initLesson('JS Lesson 17', 'Timers, asynchronous code');
 
 const modalInstance = initModal();
 const galleryOptions = {

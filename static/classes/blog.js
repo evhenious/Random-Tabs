@@ -1,4 +1,4 @@
-import { clearData, getData, saveData } from './storage';
+import { clearData, getData, saveData } from '../helpers/storage';
 
 class Blog {
   #postsRoot;
@@ -17,6 +17,7 @@ class Blog {
 
     this.#date = document.createElement('input');
     this.#date.setAttribute('type', 'date');
+    this.#date.defaultValue = new Date().toISOString().slice(0, 10);
 
     this.#text = document.createElement('input');
     this.#text.classList.add('text-input');
@@ -48,7 +49,7 @@ class Blog {
         return;
       }
 
-      const defaultDate = new Date().toISOString().slice(0, 10);
+      // const defaultDate = new Date().toISOString().slice(0, 10);
 
       const newPost = {
         date: this.#date.value || defaultDate,
