@@ -1,5 +1,7 @@
 import { clearData, getData, saveData } from '../helpers/storage';
 
+const defaultInputPlaceholder = 'Enter your notes...';
+
 class Blog {
   #postsRoot;
   #content;
@@ -21,6 +23,8 @@ class Blog {
 
     this.#text = document.createElement('input');
     this.#text.classList.add('text-input');
+    this.#text.placeholder = defaultInputPlaceholder;
+    this.#text.addEventListener('blur', this.#resetTextInputStatus.bind(this));
 
     // місце для додавання збережених постів
     this.#content = document.createElement('div');
@@ -43,17 +47,14 @@ class Blog {
     const handleSubmit = (event) => {
       event.preventDefault();
 
-      // а ще краще якби прикрутити валідацю і не давати натиснути Enter на пустій строчці
-      if (!this.#text.value) {
-        console.warn('empty input');
+      const isTextValid = this.#validateTextInput();
+      if (!isTextValid) {
         return;
       }
 
-      // const defaultDate = new Date().toISOString().slice(0, 10);
-
       const newPost = {
-        date: this.#date.value || defaultDate,
-        content: this.#text.value
+        date: this.#date.value,
+        content: this.#text.value,
       };
       this.#blogPosts.push(newPost);
       saveData(this.#blogPosts);
@@ -77,6 +78,25 @@ class Blog {
     });
 
     this.#content.replaceChildren(...preparedDivs);
+  }
+
+  #resetTextInputStatus() {
+    this.#text.classList.remove('invalid');
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  #validateTextInput() {
+    let isValid = true;
+
+    if (!this.#text.value) {
+      this.#text.classList.add('invalid');
+      console.warn('empty input');
+      isValid = false;
+    }
+
+    return isValid;
   }
 }
 

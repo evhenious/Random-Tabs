@@ -30,3 +30,8 @@ form * {
   flex: 1;
   max-width: 520px;
 }
+
+.invalid {
+  border: 2px solid rgb(189, 19, 19);
+  background-color: rgba(189, 19, 19, 0.2);
+}
