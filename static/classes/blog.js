@@ -22,6 +22,20 @@ class Blog {
     this.#date = this.#initDatePicker();
     this.#text = this.#initTextInput();
 
+    this.#filePicker = document.createElement('input');
+    this.#filePicker.setAttribute('type', 'file');
+
+    this.#filePicker.addEventListener('change', ({ target }) => {
+      const [fileMetadata] = target.files;
+      try {
+        fileMetadata.text()
+          .then((value) => console.log(JSON.parse(value)))
+          .catch((err) => console.warn('Cannot parse JSON', err));
+      } catch (err) {
+        console.warn('no file selected')
+      }
+    });
+
     // не даємо виконувати івент хендлер поки не пройде час після останнього виконання
     const timeToDebaunce = 1000; // 1 second
     const debouncedFunc = debounce((event) => {
@@ -32,7 +46,7 @@ class Blog {
     // місце для додавання збережених постів
     this.#content = document.createElement('div');
     this.#postsRoot.append(this.#content, this.#form);
-    this.#form.append(this.#date, this.#text);
+    this.#form.append(this.#date, this.#text, this.#filePicker);
 
     document.getElementById(siblingId).insertAdjacentElement('afterend', this.#postsRoot);
 
