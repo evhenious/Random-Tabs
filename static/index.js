@@ -9,7 +9,7 @@ import ProgressBar from './classes/progressBar.js';
 import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
 
-initLesson('JS Lesson 17', 'Timers, asynchronous code');
+initLesson('JS Lesson 18', 'Asynchronous code - Promises');
 
 const modalInstance = initModal();
 const galleryOptions = {
@@ -52,21 +52,3 @@ function getProgressLength() {
 }
 
 const blog = new Blog('lesson-title');
-
-
-
-
-// date playground
-const someDate = new Date();
-const someAnotherDate = new Date('2022-08-30');
-
-console.log(someDate.toISOString(), someDate.getTime());
-
-console.log({
-  'local hours': someDate.getHours(),
-  'UTC hours': someDate.getUTCHours(),
-  'local day': someDate.getDate(),
-  'UTC day': someDate.getUTCDate()
-});
-
-console.log((someDate - someAnotherDate) / (1000 * 60 * 60));
