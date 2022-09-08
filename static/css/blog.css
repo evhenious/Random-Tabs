@@ -19,6 +19,7 @@ form * {
   padding: 0 15px;
   font-family: monospace;
   font-size: larger;
+  box-shadow: inset 20px 0px 20px 5px rgb(211 211 211 / 37%);
 }
 
 .post {

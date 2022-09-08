@@ -9,6 +9,7 @@ class Blog {
   #form;
   #date;
   #text;
+  #filePicker;
 
   #blogPosts = [];
 
@@ -18,14 +19,22 @@ class Blog {
     this.#postsRoot = document.createElement('div');
     this.#postsRoot.setAttribute('id', 'posts');
 
-    this.#date = document.createElement('input');
-    this.#date.setAttribute('type', 'date');
-    this.#date.defaultValue = new Date().toISOString().slice(0, 10);
+    this.#date = this.#initDatePicker();
+    this.#text = this.#initTextInput();
 
-    this.#text = document.createElement('input');
-    this.#text.classList.add('text-input');
-    this.#text.placeholder = defaultInputPlaceholder;
-    this.#text.addEventListener('blur', this.#resetTextInputStatus.bind(this));
+    this.#filePicker = document.createElement('input');
+    this.#filePicker.setAttribute('type', 'file');
+
+    this.#filePicker.addEventListener('change', ({ target }) => {
+      const [fileMetadata] = target.files;
+      try {
+        fileMetadata.text()
+          .then((value) => console.log(JSON.parse(value)))
+          .catch((err) => console.warn('Cannot parse JSON', err));
+      } catch (err) {
+        console.warn('no file selected')
+      }
+    });
 
     // не даємо виконувати івент хендлер поки не пройде час після останнього виконання
     const timeToDebaunce = 1000; // 1 second
@@ -34,12 +43,10 @@ class Blog {
     }, timeToDebaunce);
     this.#text.addEventListener('input', debouncedFunc);
 
-
     // місце для додавання збережених постів
     this.#content = document.createElement('div');
-
     this.#postsRoot.append(this.#content, this.#form);
-    this.#form.append(this.#date, this.#text);
+    this.#form.append(this.#date, this.#text, this.#filePicker);
 
     document.getElementById(siblingId).insertAdjacentElement('afterend', this.#postsRoot);
 
@@ -56,12 +63,12 @@ class Blog {
     const handleSubmit = (event) => {
       event.preventDefault();
 
-      const isTextValid = this.#validateTextInput();
+      const isTextValid = this.validateTextInput();
       if (!isTextValid) {
         this.#text.placeholder = 'Field cannot be empty';
 
         setTimeout(() => {
-          this.#resetTextInputStatus();
+          this.resetTextInputStatus();
           this.#text.placeholder = defaultInputPlaceholder;
         }, 3_000);
 
@@ -96,14 +103,18 @@ class Blog {
     this.#content.replaceChildren(...preparedDivs);
   }
 
-  #resetTextInputStatus() {
+  /**
+   * Resets _invalid_ text input status
+   */
+  resetTextInputStatus() {
     this.#text.classList.remove('invalid');
   }
 
   /**
-   * @returns {boolean}
+   * Triggers text validation in text input
+   * @returns {boolean} is current text input value valid or not
    */
-  #validateTextInput() {
+  validateTextInput() {
     let isValid = true;
 
     if (!this.#text.value) {
@@ -113,6 +124,29 @@ class Blog {
     }
 
     return isValid;
+  }
+
+  /**
+   * @returns {HTMLInputElement}
+   */
+  #initDatePicker() {
+    const datePicker = document.createElement('input');
+    datePicker.setAttribute('type', 'date');
+    datePicker.defaultValue = new Date().toISOString().slice(0, 10);
+
+    return datePicker;
+  }
+
+  /**
+   * @returns {HTMLInputElement}
+   */
+  #initTextInput() {
+    const textInput = document.createElement('input');
+    textInput.classList.add('text-input');
+    textInput.placeholder = defaultInputPlaceholder;
+    textInput.addEventListener('blur', this.resetTextInputStatus.bind(this));
+
+    return textInput;
   }
 }
 

@@ -3,7 +3,7 @@
             event loop                                |
                                                       |
   --------------->---------------                     V
-  |                             |       |  task queue -------------|
+  |                             |       |------- task queue -------|
   |                             |       |                          |
   |      JS doing nothing,      |       |                          |
   ^                             | <-----|         -empty-          |
@@ -15,15 +15,15 @@
 
 
 
-                                             First In - First Out
-            event loop                                |
-                                                      |
-  --------------->---------------                     V
-  |                             |       |  task queue -------------|
-  |                             |       |  - script loads          |
-  |     JS processing tasks     |       |  - mouse clicks          |
-  ^                             | <-----|  - other event handlers  |
-  |     in order they appear    V       |                          |
-  |           in queue          |       |  - resolved timers       |
-  |                             |       |                          |
-  ---------------<---------------       ----------------------------
+                                                                                  First In - First Out
+                                                 event loop                                |
+                                                                                           |
+               microtasks              --------------->---------------                     V
+      ---------------------------      |                             |       |------- task queue -------|
+      |                         |      |                             |       |  - script loads          |
+      |                         |      |     JS processing order:    |       |  - mouse clicks          |
+      |         Promises        |----> ^     1 - task                | <-----|  - other event handlers  |
+      |                         |      |     2 - microtasks          V       |                          |
+      |                         |      |                             |       |  - resolved timers       |
+      ---------------------------      |                             |       |                          |
+                                       ---------------<---------------       ----------------------------
