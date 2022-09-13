@@ -12,6 +12,7 @@
   cursor: pointer;
   padding: 14px 16px;
   transition: 0.3s;
+  font-size: inherit;
 }
 
 #page-tab button:hover {

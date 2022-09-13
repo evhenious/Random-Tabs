@@ -28,11 +28,12 @@ class Blog {
     this.#filePicker.addEventListener('change', ({ target }) => {
       const [fileMetadata] = target.files;
       try {
-        fileMetadata.text()
+        fileMetadata
+          .text()
           .then((value) => console.log(JSON.parse(value)))
           .catch((err) => console.warn('Cannot parse JSON', err));
       } catch (err) {
-        console.warn('no file selected')
+        console.warn('no file selected');
       }
     });
 
@@ -45,7 +46,7 @@ class Blog {
 
     // місце для додавання збережених постів
     this.#content = document.createElement('div');
-    this.#postsRoot.append(this.#content, this.#form);
+    this.#postsRoot.append(this.#form, this.#content);
     this.#form.append(this.#date, this.#text, this.#filePicker);
 
     document.getElementById(rootId).insertAdjacentElement('afterbegin', this.#postsRoot);
@@ -79,7 +80,7 @@ class Blog {
         date: this.#date.value,
         content: this.#text.value,
       };
-      this.#blogPosts.push(newPost);
+      this.#blogPosts.unshift(newPost);
       saveData(this.#blogPosts);
 
       this.#text.value = '';
@@ -91,14 +92,15 @@ class Blog {
 
   #loadPosts() {
     // тут може бути сортування... або ні :)
-    const preparedDivs = this.#blogPosts.map((post) => {
-      const { date, content } = post;
-      const postDiv = document.createElement('div');
-      postDiv.classList.add('post');
-      postDiv.innerText = `${date} - ${content}`;
+    const preparedDivs = this.#blogPosts
+      .map((post) => {
+        const { date, content } = post;
+        const postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+        postDiv.innerText = `${date} - ${content}`;
 
-      return postDiv;
-    });
+        return postDiv;
+      });
 
     this.#content.replaceChildren(...preparedDivs);
   }

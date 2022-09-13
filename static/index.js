@@ -55,6 +55,7 @@ const blog = new Blog('blog');
 
 // adding simple tabs to the page
 document.getElementById('page-tab').addEventListener('click', selectTab);
+document.querySelector('button.default-active')?.click();
 
 function selectTab(event) {
   const tabcontent = [...document.getElementsByClassName('tabcontent')];
