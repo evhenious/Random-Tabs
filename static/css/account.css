@@ -1,0 +1,17 @@
+#user-content-root > iframe {
+  margin: auto;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.user-post {
+  margin-bottom: 15px;
+}
+
+.user-post :first-child {
+  font-weight: bold;
+}
+
+.user-post :last-child {
+  font-family: monospace;
+}

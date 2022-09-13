@@ -12,6 +12,7 @@ class Account {
     this.#form = document.createElement('form');
     this.#usernameInput = this.#initUsernameInput();
     this.#data = document.createElement('div');
+    this.#data.setAttribute('id', 'user-content-root');
 
     this.#form.append(this.#usernameInput);
     this.#form.addEventListener('submit', this.handleSubmit.bind(this));
@@ -25,18 +26,14 @@ class Account {
     const isInputValid = this.validateUsernameInput();
     if (!isInputValid) {
       this.setInputValid(false, 'Field cannot be empty');
-
-      setTimeout(() => {
-        this.setInputValid(true);
-      }, 3_000);
-
+      setTimeout(this.setInputValid.bind(this, true), 3_000);
       return;
     }
 
     //! fetch user
     const userName = this.#usernameInput.value;
     getUserByName(userName)
-    // якщо юзер знайдений - пробуєм дістати його пости по юзер айді
+      // якщо юзер знайдений - пробуєм дістати його пости по юзер айді
       .then(
         (user) => getPostsForUser(user.id).then((posts) => ({ user, posts }))
       )
@@ -46,18 +43,18 @@ class Account {
 
         const postDivs = posts.map((post) => {
           const div = document.createElement('div');
-          div.innerHTML = `<div>${post.title}</div><span>${post.body}</span><br/><br/>`;
+          div.classList.add('user-post');
+          div.innerHTML = `<div>${post.title}</div><span>${post.body}</span>`;
           return div;
         });
 
         this.#data.replaceChildren(userMap, ...postDivs);
       })
+      // якщо юзер НЕ знайдений - обробка помилок
       .catch((err) => {
         this.setInputValid(false, err.message);
         this.#data.innerHTML = '';
-        setTimeout(() => {
-          this.setInputValid(true);
-        }, 3_000);
+        setTimeout(this.setInputValid.bind(this, true), 3_000);
       });
   }
 
