@@ -1,4 +1,5 @@
-import { getMapIframe } from "../helpers/mapHelper";
+import { getMapIframe } from '../helpers/mapHelper';
+import { getPostsForUser, getUserByName } from '../helpers/networkHelper';
 
 const defaultInputPlaceholder = 'Please type your login';
 
@@ -34,23 +35,11 @@ class Account {
 
     //! fetch user
     const userName = this.#usernameInput.value;
-    fetch(`http://jsonplaceholder.typicode.com/users?username=${userName}`)
-      .then((data) => data.json()) // дістаємо наші дані із респонса в форматі JSON
-      .then((data = []) => {
-        // якщо пошук юзера повернув пустий масив - кидаємо помилку "не знайдено"
-        if (!data.length) {
-          throw new Error(`User [${userName}] not found...`);
-        }
-
-        const [user] = data;
-        return user;
-      })
-      .then((user) => {
-        // якщо юзер знайдений - пробуєм дістати його пости по юзер айді
-        return fetch(`http://jsonplaceholder.typicode.com/users/${user.id}/posts`)
-          .then((data) => data.json())
-          .then((posts) => ({ user, posts }))
-      })
+    getUserByName(userName)
+    // якщо юзер знайдений - пробуєм дістати його пости по юзер айді
+      .then(
+        (user) => getPostsForUser(user.id).then((posts) => ({ user, posts }))
+      )
       .then(({ user, posts = [] }) => {
         //* show the MAP and some posts!
         const userMap = getMapIframe(user.address.geo);
