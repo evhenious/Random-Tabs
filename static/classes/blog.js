@@ -1,5 +1,5 @@
 import { debounce } from '../helpers/lodashHandmade';
-import { clearData, getData, saveData } from '../helpers/storage';
+import { getData, saveData } from '../helpers/storage';
 
 const defaultInputPlaceholder = 'Enter your notes...';
 

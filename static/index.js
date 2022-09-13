@@ -8,6 +8,7 @@ import Gallery from './classes/gallery.js';
 import ProgressBar from './classes/progressBar.js';
 import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
+import Account from './classes/account';
 
 initLesson('JS Lesson 19', 'Client-server communication, REST API');
 
@@ -52,6 +53,8 @@ function getProgressLength() {
 }
 
 const blog = new Blog('blog');
+
+const accountPage = new Account('account');
 
 // adding simple tabs to the page
 document.getElementById('page-tab').addEventListener('click', selectTab);

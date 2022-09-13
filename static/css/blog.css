@@ -28,7 +28,6 @@ form * {
 
 .text-input {
   flex: 1;
-  max-width: 520px;
 }
 
 .invalid {
