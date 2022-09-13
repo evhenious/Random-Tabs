@@ -19,7 +19,25 @@
 
   <h1 id="lesson-title">I am a template</h1>
 
-  <div id="gallery"></div>
+  <div id="page-tab">
+    <button data-id="1" class="tablinks">Art Gallery</button>
+    <button data-id="2" class="tablinks">Microblog</button>
+    <button data-id="3" class="tablinks">Account</button>
+  </div>
+
+  <!-- Tab content -->
+  <div id="tabs">
+    <div id="1" class="tabcontent">
+      <div id="gallery"></div>
+    </div>
+
+    <div id="2" class="tabcontent" >
+      <div id="blog"></div>
+    </div>
+    <div id="3" class="tabcontent">
+      <div id="account"></div>
+    </div>
+  </div>
 
   <!-- lesson module -->
   <script type="module" src="./index.js"></script>

@@ -1,5 +1,5 @@
 import 'lazysizes';
-import { throttle } from './helpers/lodashHandmade'
+import { throttle } from './helpers/lodashHandmade';
 
 import { initLesson } from './helpers/consoleConfig.js';
 
@@ -51,4 +51,19 @@ function getProgressLength() {
   return Math.round(scrollPercent * 100);
 }
 
-const blog = new Blog('lesson-title');
+const blog = new Blog('blog');
+
+// adding simple tabs to the page
+document.getElementById('page-tab').addEventListener('click', selectTab);
+
+function selectTab(event) {
+  const tabcontent = [...document.getElementsByClassName('tabcontent')];
+  tabcontent.forEach((element) => element.style.display = 'none');
+
+  const tablinks = [...document.getElementsByClassName('tablinks')];
+  tablinks.forEach((tablink) => tablink.classList.remove('active'));
+
+  const { id: tabId } = event.target.dataset;
+  document.getElementById(tabId).style.display = 'block';
+  event.target.classList.add('active');
+}
