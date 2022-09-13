@@ -1,5 +1,5 @@
 import 'lazysizes';
-import { throttle } from './helpers/lodashHandmade'
+import { throttle } from './helpers/lodashHandmade';
 
 import { initLesson } from './helpers/consoleConfig.js';
 
@@ -8,9 +8,9 @@ import Gallery from './classes/gallery.js';
 import ProgressBar from './classes/progressBar.js';
 import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
-import { runHeavyWork, runHeavyWorkV2 } from './helpers/heavyWork';
+import Account from './classes/account';
 
-initLesson('JS Lesson 18', 'Asynchronous code - Promises');
+initLesson('JS Lesson 19', 'Client-server communication, REST API');
 
 const modalInstance = initModal();
 const galleryOptions = {
@@ -52,55 +52,22 @@ function getProgressLength() {
   return Math.round(scrollPercent * 100);
 }
 
-const blog = new Blog('lesson-title');
+const blog = new Blog('blog');
 
-document.getElementById('lesson-title')
-  .addEventListener('click', runHeavyWorkV2);
+const accountPage = new Account('account');
 
+// adding simple tabs to the page
+document.getElementById('page-tab').addEventListener('click', selectTab);
+document.querySelector('button.default-active')?.click();
 
-// const someAsyncStuff = new Promise((resolve, reject) => {
-//   // some super-async stuff
-//   console.log('Promise is ongoing...');
+function selectTab(event) {
+  const tabcontent = [...document.getElementsByClassName('tabcontent')];
+  tabcontent.forEach((element) => element.style.display = 'none');
 
-//   resolve('Hello from Promise');
-//   // reject(new Error('oops'));
-// });
+  const tablinks = [...document.getElementsByClassName('tablinks')];
+  tablinks.forEach((tablink) => tablink.classList.remove('active'));
 
-
-
-// someAsyncStuff
-//   .then((value) => console.log(value))
-//   .catch((value) => console.warn(value))
-//   .finally(() => {
-//     console.log('finally...')
-//   });
-
-// someAsyncStuff.catch(() => console.log('another catch'));
-
-// setTimeout(() => {
-//   console.log('Hello from timer')
-// }, 0);
-
-// console.log('End of sync code');
-
-// Web worker - окрема сутність з власним незалежним івент лупом і глобалами. В ньому можна робити будь-які важкі речі,
-// і це не буде блокувати основний івент луп, рендерінг, і так далі.
-// Web worker не має доступу до html, єдиний спосіб взаємодії з ним - відправка команд через _postMessage_
-// і отримання відповідей через _onmessage_
-
-// Створюємо воркер на базі окремого файла - не на базі простого імпорта функції!
-const worker = new Worker('./worker.js', { type: 'module' });
-
-// можна відправляти будь-які дані - строки, об'єкти... вони будуть склоновані і копії передані в воркер
-console.log('Main thread:', 'Asking worker to run a few tasks');
-
-worker.postMessage({ command: 'run-heavy-work' });
-worker.postMessage({ command: 'do-a-barrel' });
-
-// один івент хендлер на всі мессаджі
-worker.onmessage = (event) => {
-  // отримуєм відповідь з воркера
-  console.log('Main thread:', event.data);
+  const { id: tabId } = event.target.dataset;
+  document.getElementById(tabId).style.display = 'block';
+  event.target.classList.add('active');
 }
-
-console.log('Main thread:', 'End');

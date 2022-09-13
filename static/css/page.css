@@ -6,6 +6,6 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40vh;
+  height: 15vh;
   border-bottom: 1px solid lightgrey;
 }
