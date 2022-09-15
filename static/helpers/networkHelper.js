@@ -27,4 +27,22 @@ function getPostsForUser(userId) {
     .then((data) => data.json());
 }
 
-export { getUserByName, getPostsForUser };
+function getImages() {
+  return fetch('https://picsum.photos/v2/list')
+    .then((response) => response.json())
+    .then((data) => {
+      const processedData = data.map((img) => {
+        //? https://picsum.photos/id/0/ 5616/3744 => https://picsum.photos/id/0/ 330/330
+        const preview = img.download_url.replace(/\d{1,4}\/\d{1,4}$/, '330/330');
+
+        return {
+          original: img.download_url,
+          preview
+        };
+      });
+
+      return processedData;
+    });
+}
+
+export { getUserByName, getPostsForUser, getImages };

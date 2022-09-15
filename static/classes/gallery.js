@@ -1,3 +1,5 @@
+import { getImages } from "../helpers/networkHelper";
+
 class Gallery {
   static #galleryImageClass = 'gallery-item';
   static #lazyLoadClass = 'lazyload';
@@ -5,14 +7,16 @@ class Gallery {
   #galleryRoot;
   #options;
 
-  constructor(galleryRootId = '', imagesConfig = [], options = {}) {
+  constructor(galleryRootId = '', options = {}) {
     this.#options = {...options};
 
     // init root element
     this.#galleryRoot = document.querySelector(galleryRootId);
 
     // init images based on given config
-    this.#galleryRoot.append(...this.#createGalleryImages(imagesConfig));
+    getImages().then((processedData) => {
+      this.#galleryRoot.append(...this.#createGalleryImages(processedData));
+    });
   }
 
   /**
