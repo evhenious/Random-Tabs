@@ -6,11 +6,10 @@ import { initLesson } from './helpers/consoleConfig.js';
 import Blog from './classes/blog.js';
 import Gallery from './classes/gallery.js';
 import ProgressBar from './classes/progressBar.js';
-import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
 import Account from './classes/account';
 
-initLesson('JS Lesson 19', 'Client-server communication, REST API');
+initLesson('JS Lesson 20', 'Client-server communication, REST API part 2');
 
 const modalInstance = initModal();
 const galleryOptions = {
@@ -18,7 +17,7 @@ const galleryOptions = {
   placeholder: '/images/empty.png',
 };
 
-const gallery = new Gallery('#gallery', shuffle(galleryItems), galleryOptions);
+const gallery = new Gallery('#gallery', galleryOptions);
 gallery.addClickHandler(handleClickOnImage);
 
 /**
