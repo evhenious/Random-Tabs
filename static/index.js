@@ -10,7 +10,7 @@ import { galleryItems, shuffle } from './helpers/imagesConfig.js';
 import { initModal, setModalImage } from './helpers/modal.js';
 import Account from './classes/account';
 
-initLesson('JS Lesson 19', 'Client-server communication, REST API');
+initLesson('JS Lesson 20', 'Client-server communication, REST API part 2');
 
 const modalInstance = initModal();
 const galleryOptions = {

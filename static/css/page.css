@@ -9,3 +9,19 @@ h1 {
   height: 15vh;
   border-bottom: 1px solid lightgrey;
 }
+
+button {
+  border: 1px solid #ccc;
+  font-size: larger;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 12px;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+button:active {
+  background-color: #ccc;
+}

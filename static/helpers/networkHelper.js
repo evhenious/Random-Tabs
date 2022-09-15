@@ -1,11 +1,11 @@
-const baseApiAddress = 'http://jsonplaceholder.typicode.com';
+const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
 
 /**
  * @param {string} userName
  * @returns {Promise<Object>} user data if user found
  */
 function getUserByName(userName) {
-  return fetch(`${baseApiAddress}/users?username=${userName}`)
+  return fetch(`${baseUserApiAddress}/users?username=${userName}`)
     .then((data) => data.json()) // дістаємо наші дані із респонса в форматі JSON
     .then((data = []) => {
       // якщо пошук юзера повернув пустий масив - кидаємо помилку "не знайдено"
@@ -23,7 +23,7 @@ function getUserByName(userName) {
  * @returns {Promise<Object[]>} posts of given user
  */
 function getPostsForUser(userId) {
-  return fetch(`${baseApiAddress}/users/${userId}/posts`)
+  return fetch(`${baseUserApiAddress}/users/${userId}/posts`)
     .then((data) => data.json());
 }
 

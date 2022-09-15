@@ -13,7 +13,6 @@ class Gallery {
 
     // init images based on given config
     this.#galleryRoot.append(...this.#createGalleryImages(imagesConfig));
-
   }
 
   /**
