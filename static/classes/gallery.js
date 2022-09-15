@@ -1,4 +1,8 @@
-import { getImages } from "../helpers/networkHelper";
+import { getImages } from '../helpers/networkHelper';
+
+const defaultPageParams = {
+  limit: 10,
+};
 
 class Gallery {
   static #galleryImageClass = 'gallery-item';
@@ -6,37 +10,59 @@ class Gallery {
 
   #galleryRoot;
   #options;
-
-  #pageIndex = 1;
-  #pageLimit = 10;
+  #buttonRoot;
 
   constructor(galleryRootId = '', options = {}) {
-    this.#options = {...options};
+    this.#options = { ...options };
 
     // init root element
     this.#galleryRoot = document.querySelector(galleryRootId);
 
-    // button to LOAD MOAR!
-    const loadMoarBtn = document.createElement('button');
-    loadMoarBtn.innerText = 'Load Next Page';
-    loadMoarBtn.addEventListener('click', () => {
-      this.#pageIndex += 1;
-      this.#getPageOfImages();
-    });
-    this.#galleryRoot.insertAdjacentElement('afterend', loadMoarBtn);
+    this.#buttonRoot = document.createElement('div');
+    this.#buttonRoot.classList.add('button-root');
+    this.#galleryRoot.insertAdjacentElement('afterend', this.#buttonRoot);
 
-    // to load 1 page
-    this.#getPageOfImages();
+    // to load first page automatically on gallery init
+    this.#loadGalleryPage();
   }
 
-  #getPageOfImages() {
-    const params = new URLSearchParams();
-    params.set('page', this.#pageIndex);
-    params.set('limit', this.#pageLimit);
+  /**
+   * Triggers data fetch from Lorem Picsum.
+   * After getting the page, replaces current images with new ones,
+   * and refreshes nav buttons in **#buttonRoot** (see **createNavigationButtons** method)
+   *
+   * @param {Object} pageParams
+   */
+  #loadGalleryPage(pageParams = defaultPageParams) {
+    getImages(pageParams).then((responseData) => {
+      const { picturesData, pageLinks } = responseData;
 
-    getImages(params).then((processedData) => {
-      this.#galleryRoot.append(...this.#createGalleryImages(processedData));
+      this.#galleryRoot.replaceChildren(...this.#createGalleryImages(picturesData));
+
+      this.#createNavigationButtons(pageLinks);
     });
+  }
+
+  /**
+   * Dynamically create nav buttons. _prev_ or _next_ key in incoming object are totally
+   * optional, it depends on what nav links for current page we got from the backend
+   *
+   * @param {Object} pageLinks
+   * @param {string} [pageLinks.prev]
+   * @param {string} [pageLinks.next]
+   */
+  #createNavigationButtons(pageLinks) {
+    const navigationBtns = Object.entries(pageLinks).map(([key, url]) => {
+      const btn = document.createElement('button');
+      btn.classList.add(key);
+      btn.innerText = `Load ${key} Page`;
+
+      btn.addEventListener('click', this.#loadGalleryPage.bind(this, { url }));
+
+      return btn;
+    });
+
+    this.#buttonRoot.replaceChildren(...navigationBtns);
   }
 
   /**
