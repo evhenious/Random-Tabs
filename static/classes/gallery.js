@@ -7,14 +7,34 @@ class Gallery {
   #galleryRoot;
   #options;
 
+  #pageIndex = 1;
+  #pageLimit = 10;
+
   constructor(galleryRootId = '', options = {}) {
     this.#options = {...options};
 
     // init root element
     this.#galleryRoot = document.querySelector(galleryRootId);
 
-    // init images based on given config
-    getImages().then((processedData) => {
+    // button to LOAD MOAR!
+    const loadMoarBtn = document.createElement('button');
+    loadMoarBtn.innerText = 'Load Next Page';
+    loadMoarBtn.addEventListener('click', () => {
+      this.#pageIndex += 1;
+      this.#getPageOfImages();
+    });
+    this.#galleryRoot.insertAdjacentElement('afterend', loadMoarBtn);
+
+    // to load 1 page
+    this.#getPageOfImages();
+  }
+
+  #getPageOfImages() {
+    const params = new URLSearchParams();
+    params.set('page', this.#pageIndex);
+    params.set('limit', this.#pageLimit);
+
+    getImages(params).then((processedData) => {
       this.#galleryRoot.append(...this.#createGalleryImages(processedData));
     });
   }

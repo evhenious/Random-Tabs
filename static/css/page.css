@@ -16,6 +16,8 @@ button {
   outline: none;
   cursor: pointer;
   padding: 10px 12px;
+  display: block;
+  margin: auto;
 }
 
 button:hover {

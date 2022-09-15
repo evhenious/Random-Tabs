@@ -27,8 +27,12 @@ function getPostsForUser(userId) {
     .then((data) => data.json());
 }
 
-function getImages() {
-  return fetch('https://picsum.photos/v2/list')
+/**
+ * @param {URLSearchParams} params
+ * @returns {Promise<Object[]>}
+ */
+function getImages(params) {
+  return fetch(`https://picsum.photos/v2/list?${params}`)
     .then((response) => response.json())
     .then((data) => {
       const processedData = data.map((img) => {
