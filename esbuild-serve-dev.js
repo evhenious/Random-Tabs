@@ -15,5 +15,6 @@ serve(
     minify: true,
     sourcemap: true,
     outdir: './dist',
+    logLevel: 'info'
   }
 );
