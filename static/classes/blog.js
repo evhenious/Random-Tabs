@@ -1,9 +1,10 @@
 import { debounce } from '../helpers/lodashHandmade';
 import { getData, saveData } from '../helpers/storage';
+import { Mountable } from './tabs';
 
 const defaultInputPlaceholder = 'Enter your notes...';
 
-class Blog {
+class Blog extends Mountable {
   #postsRoot;
   #content;
   #form;
@@ -13,7 +14,12 @@ class Blog {
 
   #blogPosts = [];
 
-  constructor(rootId = '') {
+  /**
+   * @param {HTMLElement} parent
+   */
+  constructor(parent) {
+    super(parent, 'blog');
+
     // створюємо елементи для блогпост форми
     this.#form = document.createElement('form');
     this.#postsRoot = document.createElement('div');
@@ -49,7 +55,7 @@ class Blog {
     this.#postsRoot.append(this.#form, this.#content);
     this.#form.append(this.#date, this.#text, this.#filePicker);
 
-    document.getElementById(rootId).insertAdjacentElement('afterbegin', this.#postsRoot);
+    this.root.append(this.#postsRoot);
 
     this.#initPostCreator();
     this.#blogPosts = getData() || [];

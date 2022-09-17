@@ -6,10 +6,9 @@
   "scripts": {
     "copy-assets": "mkdir -p ./dist && cp -r ./images ./dist/images && cp ./static/index.html ./dist/index.html",
     "build-js": "esbuild ./static/index.js --bundle --minify --outdir=./dist ",
-    "build-css": "esbuild ./static/root.css --bundle --minify --outfile=./dist/root.css",
+    "build-css": "esbuild ./static/index.css --bundle --minify --outfile=./dist/index.css",
     "build": "npm run copy-assets && npm run build-js && npm run build-css",
-    "build-serve-dev": "esbuild index=./static/index.js root=./static/root.css worker=./static/web_workers/worker.js --bundle --outdir=./dist --minify --sourcemap --servedir=./dist",
-    "start-dev": "npm run copy-assets && npm run build-serve-dev",
+    "start-dev": "npm run copy-assets && node ./esbuild-serve-dev",
     "start-dev-parcel": "npx parcel ./static/index.html"
   },
   "repository": {

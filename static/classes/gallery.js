@@ -1,29 +1,41 @@
 import { getImages } from '../helpers/networkHelper';
+import { Mountable } from './tabs';
 
 const defaultPageParams = {
   limit: 10,
 };
 
-class Gallery {
+class Gallery extends Mountable {
   static #galleryImageClass = 'gallery-item';
   static #lazyLoadClass = 'lazyload';
 
-  #galleryRoot;
   #options;
   #buttonRoot;
 
-  constructor(galleryRootId = '', options = {}) {
+  /**
+   * @param {HTMLElement} parent
+   * @param {Object} options
+   * @param {Function} [imageClickHandler]
+   */
+  constructor(parent, options = {}, imageClickHandler) {
+    super(parent, 'gallery');
     this.#options = { ...options };
 
     // init root element
-    this.#galleryRoot = document.querySelector(galleryRootId);
+    const root = document.createElement('div');
+    root.setAttribute('id', 'gallery');
+    parent.append(root);
 
     this.#buttonRoot = document.createElement('div');
     this.#buttonRoot.classList.add('button-root');
-    this.#galleryRoot.insertAdjacentElement('afterend', this.#buttonRoot);
+    this.root.insertAdjacentElement('afterend', this.#buttonRoot);
 
     // to load first page automatically on gallery init
     this.#loadGalleryPage();
+
+    if (imageClickHandler) {
+      this.addClickHandler(imageClickHandler);
+    }
   }
 
   /**
@@ -37,7 +49,7 @@ class Gallery {
     getImages(pageParams).then((responseData) => {
       const { picturesData, pageLinks } = responseData;
 
-      this.#galleryRoot.replaceChildren(...this.#createGalleryImages(picturesData));
+      this.root.replaceChildren(...this.#createGalleryImages(picturesData));
 
       this.#createNavigationButtons(pageLinks);
     });
@@ -94,7 +106,7 @@ class Gallery {
    * @param {(event: MouseEvent) => undefined} handler
    */
   addClickHandler(handler) {
-    this.#galleryRoot.addEventListener('click', (event) => {
+    this.root.addEventListener('click', (event) => {
       // ignoring clicks on anything but our images
       if (!event.target.classList.contains(Gallery.#galleryImageClass)) return;
 

@@ -3,11 +3,12 @@ import { throttle } from './helpers/lodashHandmade';
 
 import { initLesson } from './helpers/consoleConfig.js';
 
+import Account from './classes/account';
 import Blog from './classes/blog.js';
 import Gallery from './classes/gallery.js';
 import ProgressBar from './classes/progressBar.js';
+import { Tabs } from './classes/tabs';
 import { initModal, setModalImage } from './helpers/modal.js';
-import Account from './classes/account';
 
 initLesson('JS Lesson 20', 'Client-server communication, REST API part 2');
 
@@ -17,8 +18,17 @@ const galleryOptions = {
   placeholder: '/images/empty.png',
 };
 
-const gallery = new Gallery('#gallery', galleryOptions);
-gallery.addClickHandler(handleClickOnImage);
+// main tab parts
+const progressBar = new ProgressBar('progress');
+
+// adding simple tabs to the page
+const tabConfig = [
+  { name: 'Art Gallery', item: Gallery, args: [galleryOptions, handleClickOnImage], default: true },
+  { name: 'Microblog', item: Blog },
+  { name: 'Account Search', item: Account },
+];
+
+new Tabs('page-tabs', tabConfig);
 
 /**
  * Shows modal with our selected image
@@ -29,14 +39,11 @@ function handleClickOnImage({ target }) {
   modalInstance.show();
 }
 
-const progressBar = new ProgressBar('progress');
-
-// не даємо виконувати частіше ніж 120 мілісекунд
+// not quicker than once per 120 millis
 const intervalLength = 120; // milliseconds
 const throttledFunc = throttle(() => {
   progressBar.setLength(getProgressLength());
 }, intervalLength);
-
 window.addEventListener('scroll', throttledFunc);
 
 /**
@@ -51,22 +58,4 @@ function getProgressLength() {
   return Math.round(scrollPercent * 100);
 }
 
-const blog = new Blog('blog');
 
-const accountPage = new Account('account');
-
-// adding simple tabs to the page
-document.getElementById('page-tab').addEventListener('click', selectTab);
-document.querySelector('button.default-active')?.click();
-
-function selectTab(event) {
-  const tabcontent = [...document.getElementsByClassName('tabcontent')];
-  tabcontent.forEach((element) => element.style.display = 'none');
-
-  const tablinks = [...document.getElementsByClassName('tablinks')];
-  tablinks.forEach((tablink) => tablink.classList.remove('active'));
-
-  const { id: tabId } = event.target.dataset;
-  document.getElementById(tabId).style.display = 'block';
-  event.target.classList.add('active');
-}
