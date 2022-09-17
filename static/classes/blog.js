@@ -13,7 +13,15 @@ class Blog {
 
   #blogPosts = [];
 
-  constructor(rootId = '') {
+  /**
+   * @param {HTMLElement} parent
+   */
+  constructor(parent) {
+    // init root element
+    const root = document.createElement('div');
+    root.setAttribute('id', 'blog');
+    parent.append(root);
+
     // створюємо елементи для блогпост форми
     this.#form = document.createElement('form');
     this.#postsRoot = document.createElement('div');
@@ -49,7 +57,7 @@ class Blog {
     this.#postsRoot.append(this.#form, this.#content);
     this.#form.append(this.#date, this.#text, this.#filePicker);
 
-    document.getElementById(rootId).insertAdjacentElement('afterbegin', this.#postsRoot);
+    root.append(this.#postsRoot);
 
     this.#initPostCreator();
     this.#blogPosts = getData() || [];

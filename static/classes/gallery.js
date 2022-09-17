@@ -12,11 +12,19 @@ class Gallery {
   #options;
   #buttonRoot;
 
-  constructor(galleryRootId = '', options = {}) {
+  /**
+   * @param {HTMLElement} parent
+   * @param {Object} options
+   * @param {Function} [imageClickHandler]
+   */
+  constructor(parent, options = {}, imageClickHandler) {
     this.#options = { ...options };
 
     // init root element
-    this.#galleryRoot = document.querySelector(galleryRootId);
+    const root = document.createElement('div');
+    root.setAttribute('id', 'gallery');
+    parent.append(root);
+    this.#galleryRoot = root;
 
     this.#buttonRoot = document.createElement('div');
     this.#buttonRoot.classList.add('button-root');
@@ -24,6 +32,10 @@ class Gallery {
 
     // to load first page automatically on gallery init
     this.#loadGalleryPage();
+
+    if (imageClickHandler) {
+      this.addClickHandler(imageClickHandler);
+    }
   }
 
   /**

@@ -8,7 +8,15 @@ class Account {
   #usernameInput;
   #data;
 
-  constructor(rootId) {
+  /**
+   * @param {HTMLElement} parent
+   */
+  constructor(parent) {
+    // init root element
+    const root = document.createElement('div');
+    root.setAttribute('id', 'account');
+    parent.append(root);
+
     this.#form = document.createElement('form');
     this.#usernameInput = this.#initUsernameInput();
     this.#data = document.createElement('div');
@@ -17,7 +25,7 @@ class Account {
     this.#form.append(this.#usernameInput);
     this.#form.addEventListener('submit', this.handleSubmit.bind(this));
 
-    document.getElementById(rootId).append(this.#form, this.#data);
+    root.append(this.#form, this.#data);
   }
 
   handleSubmit(event) {

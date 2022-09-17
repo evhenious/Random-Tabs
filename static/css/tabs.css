@@ -1,10 +1,10 @@
-#page-tab {
+#page-tabs {
   overflow: hidden;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
 }
 
-#page-tab button {
+#page-tabs button {
   float: left;
   border: none;
   padding: 14px 16px;
@@ -13,7 +13,7 @@
 }
 
 /* static state */
-#page-tab button.active {
+#page-tabs button.active {
   background-color: #ccc;
 }
 
