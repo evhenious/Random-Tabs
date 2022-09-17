@@ -3,12 +3,12 @@ import { throttle } from './helpers/lodashHandmade';
 
 import { initLesson } from './helpers/consoleConfig.js';
 
+import Account from './classes/account';
 import Blog from './classes/blog.js';
 import Gallery from './classes/gallery.js';
 import ProgressBar from './classes/progressBar.js';
+import { Tabs } from './classes/tabs';
 import { initModal, setModalImage } from './helpers/modal.js';
-import Account from './classes/account';
-import Tabs from './classes/tabs';
 
 initLesson('JS Lesson 20', 'Client-server communication, REST API part 2');
 

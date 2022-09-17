@@ -1,9 +1,10 @@
 import { getMapIframe } from '../helpers/mapHelper';
 import { getPostsForUser, getUserByName } from '../helpers/networkHelper';
+import { Mountable } from './tabs';
 
 const defaultInputPlaceholder = 'Please type your login';
 
-class Account {
+class Account extends Mountable {
   #form;
   #usernameInput;
   #data;
@@ -12,10 +13,7 @@ class Account {
    * @param {HTMLElement} parent
    */
   constructor(parent) {
-    // init root element
-    const root = document.createElement('div');
-    root.setAttribute('id', 'account');
-    parent.append(root);
+    super(parent, 'account');
 
     this.#form = document.createElement('form');
     this.#usernameInput = this.#initUsernameInput();
@@ -25,7 +23,7 @@ class Account {
     this.#form.append(this.#usernameInput);
     this.#form.addEventListener('submit', this.handleSubmit.bind(this));
 
-    root.append(this.#form, this.#data);
+    this.root.append(this.#form, this.#data);
   }
 
   handleSubmit(event) {

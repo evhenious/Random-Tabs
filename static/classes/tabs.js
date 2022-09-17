@@ -2,11 +2,14 @@
  * @typedef TabConfig
  * @type {Object}
  * @property {string} name - tab name
- * @property {FunctionConstructor} item - class element to init in tab.
+ * @property {Mountable} item - class element to init in tab.
  * @property {boolean} [default] - if tab should be active by default
  * @property {[]} [args]
  */
 
+/**
+ * Class responsible for rendering tab group on the page.
+ */
 class Tabs {
   #tabButtons;
   #tabContents;
@@ -60,9 +63,21 @@ class Tabs {
     this.#tabContents.forEach((element) => (element.style.display = 'none'));
 
     const { id: tabId } = event.target.dataset;
-    console.log(tabId);
     this.#tabContents.find((div) => div.id === tabId).style.display = 'block';
   }
 }
 
-export default Tabs;
+/**
+ * Abstract class, serves as a base for any class we want to be rendered as a Tab content
+ */
+class Mountable {
+  constructor(parentElem, rootId) {
+    const root = document.createElement('div');
+    root.setAttribute('id', rootId);
+    parentElem.append(root);
+
+    this.root = root;
+  }
+}
+
+export { Tabs, Mountable };
