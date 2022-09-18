@@ -106,4 +106,6 @@ dist
 
 .vscode
 .DS_Store
-our_best_db
+
+# backend sqlite db file
+*.db

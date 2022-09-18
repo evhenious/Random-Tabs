@@ -10,6 +10,8 @@ const { logger } = require('./utils/logger');
 const dbHelper = require('./db').getInstance();
 const UserModel = require('./models/user_model');
 const { queryValidator } = require('./utils/query_validator');
+const { pathParamValidator } = require('./utils/param_validator');
+const { userValidator } = require('./utils/user_validator');
 
 app.use(cors());
 app.use(express.json());
@@ -31,7 +33,7 @@ app.get('/api/users', queryValidator, async (req, res, next) => {
   }
 });
 
-app.post('/api/users', async (req, res, next) => {
+app.post('/api/users', userValidator, async (req, res, next) => {
   try {
     const { body } = req;
     const resp = await userModel.createUser(body);
@@ -41,14 +43,20 @@ app.post('/api/users', async (req, res, next) => {
   }
 });
 
-app.delete('/api/users/:id', async (req, res, next) => {
-  logger.log('req.params:', req.params);
+app.patch('/api/users/:id', pathParamValidator, userValidator, async (req, res, next) => {
+  const { id } = req.params;
+  const { body } = req;
   try {
-    const id = Number(req.params.id);
-    if (isNaN(id)) {
-      throw new Error('invalid user id, should be number');
-    }
+    await userModel.updateUser(id, body);
+    res.status(200).send();
+  } catch (err) {
+    next(err);
+  }
+});
 
+app.delete('/api/users/:id', pathParamValidator, async (req, res, next) => {
+  const { id } = req.params;
+  try {
     await userModel.deleteUser(id);
     res.status(204).send();
   } catch (err) {
@@ -56,6 +64,7 @@ app.delete('/api/users/:id', async (req, res, next) => {
   }
 });
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
   logger.error(err.message);
   res.status(400).send(err.message);

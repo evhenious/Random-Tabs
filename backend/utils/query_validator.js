@@ -7,11 +7,15 @@ const allowedQueryParams = {
 
 function parseNumber(val) {
   const parsed = Number(val);
-  if (isNaN(parsed) || parsed < 0) {
-    return null;
+  if (isNaN(parsed)) {
+    return { isValid: false, error: 'should be a number'};
   }
 
-  return parsed;
+  if (parsed < 0) {
+    return { isValid: false, error: 'should be >= 0' };
+  }
+
+  return { isValid: true, value: parsed};
 }
 
 function queryValidator(req, _res, next) {
@@ -20,17 +24,17 @@ function queryValidator(req, _res, next) {
   // check supplied params first
   Object.entries(req.query).forEach(([key, val]) => {
     if (!allowedQueryParams[key]) {
-      logger.warn(`Unsupported param [${key}] skipped`);
+      logger.warn(`unsupported query param [${key}] skipped`);
       return;
     }
 
     const { validator } = allowedQueryParams[key];
-    const parsedValue = validator(val);
-    if (!parsedValue) {
-      throw new Error(`invalid [${key}] value, should be number`);
+    const { isValid, value, error } = validator(val);
+    if (!isValid) {
+      throw new Error(`invalid query param [${key}], ${error}`);
     }
 
-    parsedQuery[key] = parsedValue;
+    parsedQuery[key] = value;
   });
 
   // assign defaults for missing required params

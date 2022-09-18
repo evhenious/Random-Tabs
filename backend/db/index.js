@@ -5,18 +5,19 @@ const connect = require('@databases/sqlite');
 const { sql } = require('@databases/sqlite');
 const { logger } = require('../utils/logger');
 
-const dbFileName = 'our_best_db';
+const dbFileName = 'database.db';
 
 const messages = {
+  _default: 'server error',
   'NOT NULL constraint failed': 'field cannot be empty',
   'UNIQUE constraint failed': 'already registered in the system'
 };
 
 class DbHelper {
-  #db;
+  #dbConnection;
 
   /**
-   * Initializer for a singleton, **main** entry point to get the instance
+   * Initializer for a singleton, use this as THE **main** entry point to get the instance
    * @returns {DbHelper}
    */
   static getInstance() {
@@ -31,7 +32,7 @@ class DbHelper {
    * If you want a singletion - don't call this one manually, use static **getInstance**
    */
   constructor() {
-    let filePath = path.join(__dirname, dbFileName);
+    const filePath = path.join(__dirname, dbFileName);
 
     let isNewDb = true;
     if (fs.existsSync(filePath)) {
@@ -39,7 +40,7 @@ class DbHelper {
       isNewDb = false;
     }
 
-    this.#db = connect(filePath);
+    this.#dbConnection = connect(filePath);
 
     if (isNewDb) {
       logger.log('database not found, initializing...');
@@ -55,11 +56,11 @@ class DbHelper {
 
     try {
       const dir = await opendir(migrationsDir);
-      for await (const dirent of dir) {
-        if (dirent.isFile()) {
-          const sqlCommand = sql.file(path.join(migrationsDir, dirent.name));
-          await this.#db.query(sqlCommand);
-          logger.log(`${dirent.name} migration ran OK`);
+      for await (const entry of dir) {
+        if (entry.isFile()) {
+          const sqlCommand = sql.file(path.join(migrationsDir, entry.name));
+          await this.#dbConnection.query(sqlCommand);
+          logger.log(`[${entry.name}] migration ran OK`);
         }
       }
     } catch (err) {
@@ -72,13 +73,23 @@ class DbHelper {
    */
   async runQuery(query) {
     try {
-      return await this.#db.query(query);
+      return await this.#dbConnection.query(query);
     } catch (err) {
       logger.error(err.message);
-      const [type, description, cause] = err.message.split(':');
-
-      throw new Error(`[${cause?.split('.')[1]}] ${messages[description.trim()] || description.trim()}`);
+      throw new Error(this.#parseDbError(err));
     }
+  }
+
+  /**
+   * Parses DB errors and transforms into something readable and useable
+   * @param {Error} err
+   * @returns {string}
+   */
+  #parseDbError(err) {
+    const [, description, cause] = err.message.split(':');
+    const fieldName = cause?.split('.')[1];
+
+    return `[${fieldName}] ${messages[description.trim()] || messages._default}`;
   }
 }
 
