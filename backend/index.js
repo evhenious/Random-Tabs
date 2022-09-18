@@ -9,6 +9,7 @@ colors.enable();
 const { logger } = require('./utils/logger');
 const dbHelper = require('./db').getInstance();
 const UserModel = require('./models/user_model');
+const { queryValidator } = require('./utils/query_validator');
 
 app.use(cors());
 app.use(express.json());
@@ -19,9 +20,11 @@ app.use((req, _, next) => {
 
 const userModel = new UserModel(dbHelper);
 
-app.get('/api/users', async (_req, res, next) => {
+app.get('/api/users', queryValidator, async (req, res, next) => {
+  const { query } = req;
+
   try {
-    const users = await userModel.getUsers();
+    const users = await userModel.getUsers(query);
     res.send(users);
   } catch (err) {
     next(err);

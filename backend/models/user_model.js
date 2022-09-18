@@ -1,5 +1,4 @@
 const { sql } = require('@databases/sqlite');
-const { logger } = require('../utils/logger');
 
 class UserModel {
   constructor(dbHelper) {
@@ -7,10 +6,11 @@ class UserModel {
   }
 
   /**
+   * @param {Object} params
    * @returns {Promise<Object[]>}
    */
-  async getUsers() {
-    const query = sql`SELECT * from USERS;`;
+  getUsers(params) {
+    const query = sql`SELECT * from USERS LIMIT ${params.limit} OFFSET ${params.offset} ;`;
     return this.dbHelper.runQuery(query);
   }
 
@@ -18,7 +18,7 @@ class UserModel {
    * @param {Object} userData
    * @returns {Promise}
    */
-  async findUsers(userData) {
+  findUsers(userData) {
     const conditions = Object.entries(userData).map(([key, val]) => sql`${sql.ident(key)} = ${val}`);
     const query = sql`SELECT * FROM USERS WHERE (${sql.join(conditions, ') AND (')})`;
 
@@ -34,7 +34,7 @@ class UserModel {
     const query = sql`INSERT INTO USERS (name, email, phone) values (${name}, ${email}, ${phone});`;
     await this.dbHelper.runQuery(query);
 
-    const user = await this.findUsers({ name, email });
+    const [user] = await this.findUsers({ name, email });
     return user;
   }
 
