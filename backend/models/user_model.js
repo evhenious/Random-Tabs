@@ -1,4 +1,5 @@
 const { sql } = require('@databases/sqlite');
+const { logger } = require('../utils/logger');
 
 class UserModel {
   constructor(dbHelper) {
@@ -39,11 +40,16 @@ class UserModel {
   }
 
   /**
-   *
    * @param {number} id
    */
   async deleteUser(id) {
+    const [user] = await this.findUsers({ id });
+    if (!user) {
+      throw new Error(`user with id [${id}] not found`);
+    }
 
+    const query = sql`DELETE FROM USERS WHERE id = ${id};`;
+    return this.dbHelper.runQuery(query);
   }
 }
 
