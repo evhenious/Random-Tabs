@@ -28,6 +28,7 @@
     "@types/basiclightbox": "^5.0.1",
     "esbuild": "^0.15.6",
     "eslint": "^8.23.1",
+    "nodemon": "^2.0.20",
     "parcel": "^2.7.0"
   },
   "dependencies": {
