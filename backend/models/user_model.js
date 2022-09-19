@@ -9,16 +9,23 @@ class UserModel {
    * @param {Object} params
    * @returns {Promise<Object[]>}
    */
-  getUsers(params) {
-    const query = sql`SELECT * from USERS LIMIT ${params.limit} OFFSET ${params.offset};`;
-    return this.dbHelper.runQuery(query);
+  async getUsers(params) {
+    const getUsersQuery = sql`SELECT * from USERS LIMIT ${params.limit} OFFSET ${params.offset};`;
+    const countQuery = sql`SELECT COUNT(id) from USERS;`;
+
+    const data = await Promise.allSettled([
+      this.dbHelper.runQuery(getUsersQuery),
+      this.dbHelper.runQuery(countQuery).then((resp) => resp[0]['COUNT(id)'])
+    ]);
+
+    return data.map(({ value }) => value);
   }
 
   /**
    * @param {Object} userData
    * @returns {Promise}
    */
-  findUsers(userData) {
+  findUsersBy(userData) {
     const conditions = Object.entries(userData).map(([key, val]) => sql`${sql.ident(key)} = ${val}`);
     const query = sql`SELECT * FROM USERS WHERE (${sql.join(conditions, ') AND (')});`;
 
@@ -37,7 +44,7 @@ class UserModel {
     await this.dbHelper.runQuery(query);
 
     const { name, email } = userData;
-    const [user] = await this.findUsers({ name, email });
+    const [user] = await this.findUsersBy({ name, email });
     return user;
   }
 
@@ -47,7 +54,7 @@ class UserModel {
    * @returns {Promise}
    */
   async updateUser(id, userData) {
-    const [user] = await this.findUsers({ id });
+    const [user] = await this.findUsersBy({ id });
     if (!user) {
       throw new Error(`user with id [${id}] not found`);
     }
@@ -63,7 +70,7 @@ class UserModel {
    * @returns {Promise}
    */
   async deleteUser(id) {
-    const [user] = await this.findUsers({ id });
+    const [user] = await this.findUsersBy({ id });
     if (!user) {
       throw new Error(`user with id [${id}] not found`);
     }

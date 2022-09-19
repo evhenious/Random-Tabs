@@ -26,7 +26,8 @@ app.get('/api/users', queryValidator, async (req, res, next) => {
   const { query } = req;
 
   try {
-    const users = await userModel.getUsers(query);
+    const [users, total] = await userModel.getUsers(query);
+    res.setHeader('x-total-count', total);
     res.send(users);
   } catch (err) {
     next(err);
