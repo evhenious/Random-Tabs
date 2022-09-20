@@ -1,7 +1,12 @@
 const fields = {
+  id: { validate: restrictedField },
   name: { required: true, validate: validateNotEmptyString },
   email: { required: true, validate: validateNotEmptyString },
 };
+
+function restrictedField() {
+  return 'is restricted field, not allowed to send';
+}
 
 /**
  * @param {*} value
@@ -19,6 +24,16 @@ function validateNotEmptyString(value) {
   return null;
 }
 
+/**
+ * Validates request body for POST (user creation).
+ * Fields marked as required in fields config **must** be in body
+ *
+ * @throws if any field fails validation
+ *
+ * @param {*} req
+ * @param {*} _res
+ * @param {*} next
+ */
 function postUserValidator(req, _res, next) {
   Object.keys(fields).forEach((key) => {
     const { required, validate } = fields[key];
@@ -36,6 +51,17 @@ function postUserValidator(req, _res, next) {
   next();
 }
 
+/**
+ * Validates request body for PATCH (user update).
+ * Fields marked as required in fields config **must** be NOT EMPTY in body,
+ * but they can be omitted at all
+ *
+ * @throws if empty body or any field fails validation
+ *
+ * @param {*} req
+ * @param {*} _res
+ * @param {*} next
+ */
 function patchUserValidator(req, _res, next) {
   const patchFields = Object.keys(req.body);
   if (!patchFields.length) {
@@ -43,13 +69,15 @@ function patchUserValidator(req, _res, next) {
   }
 
   Object.keys(fields).forEach((key) => {
-    const { required, validate } = fields[key];
+    const { validate } = fields[key];
 
-    if (key in req.body && required) {
-      const error = validate(req.body[key]);
-      if (error) {
-        throw new Error(`[${key}] ${error}`);
-      }
+    if (!(key in req.body)) {
+      return;
+    }
+
+    const error = validate(req.body[key]);
+    if (error) {
+      throw new Error(`[${key}] ${error}`);
     }
   });
 
