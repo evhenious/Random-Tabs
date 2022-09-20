@@ -11,7 +11,7 @@ import { Tabs } from './classes/tabs';
 import { initModal, setModalImage } from './helpers/modal.js';
 import UserList from './classes/userList';
 
-initLesson('JS Lesson 20', 'Client-server communication, REST API part 2');
+initLesson('JS Lesson 21', 'CRUD, REST API part 3');
 
 const modalInstance = initModal();
 const galleryOptions = {
