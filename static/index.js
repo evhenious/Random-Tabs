@@ -9,6 +9,7 @@ import Gallery from './classes/gallery.js';
 import ProgressBar from './classes/progressBar.js';
 import { Tabs } from './classes/tabs';
 import { initModal, setModalImage } from './helpers/modal.js';
+import UserList from './classes/userList';
 
 initLesson('JS Lesson 20', 'Client-server communication, REST API part 2');
 
@@ -16,6 +17,15 @@ const modalInstance = initModal();
 const galleryOptions = {
   lazy: true,
   placeholder: '/images/empty.png',
+};
+
+const userListConfig = {
+  columns: [
+    {id: 'id', title: 'ID'},
+    {id: 'name', title: 'Name'},
+    {id: 'email', title: 'Email'},
+    {id: 'phone', title: 'Tel. #'}
+  ]
 };
 
 // main tab parts
@@ -26,6 +36,7 @@ const tabConfig = [
   { name: 'Art Gallery', item: Gallery, args: [galleryOptions, handleClickOnImage], default: true },
   { name: 'Microblog', item: Blog },
   { name: 'Account Search', item: Account },
+  { name: 'User List', item: UserList, args: [userListConfig] }
 ];
 
 new Tabs('page-tabs', tabConfig);

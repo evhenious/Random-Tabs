@@ -1,0 +1,33 @@
+#userlist {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 1fr;
+}
+
+.userlist-header {
+  display: contents;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.userlist-header > div {
+  background-color: #ddd;
+  border-left: 1px solid darkgrey;
+  border-top: 1px solid darkgrey;
+  border-bottom: 1px solid darkgrey;
+  padding: 5px;
+}
+
+.userlist-header :first-child {
+  text-align: center;
+}
+
+.userlist-header :last-child {
+  border-right: 1px solid darkgrey;
+}
+
+.userlist-footer {
+  grid-column: 1 / span 4;
+  border-top: 1px solid darkgrey;
+  margin-top: 2px;
+  padding: 2px;
+}
