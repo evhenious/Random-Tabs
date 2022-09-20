@@ -100,4 +100,23 @@ function transformImageUrls(img) {
   };
 }
 
-export { getAccountByName, getPostsForUser, getImages };
+function fetchUsers() {
+  //! just a template, needs rework here
+  return Promise.resolve([
+    {
+      id: 0,
+      name: 'static user',
+      email: 'test@test.com',
+      phone: '999-789-456-2321',
+    },
+  ]);
+}
+
+/**
+ * Central point for user api functionality
+ */
+const userApi = {
+  fetchUsers,
+};
+
+export { getAccountByName, getPostsForUser, getImages, userApi };

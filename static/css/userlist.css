@@ -28,6 +28,55 @@
 .userlist-footer {
   grid-column: 1 / span 4;
   border-top: 1px solid darkgrey;
-  margin-top: 2px;
+  margin-top: 5px;
   padding: 2px;
+}
+
+.userlist-rows {
+  display: contents;
+}
+
+.row {
+  display: contents;
+}
+
+.row :first-child {
+  text-align: center;
+  font: message-box;
+  border-left: none;
+}
+
+.cell {
+  padding: 5px;
+  border-left: 1px solid darkgrey;
+  border-bottom: 1px solid #ccc;
+  cursor: cell;
+}
+
+#context-menu {
+  position: absolute;
+  background-color: #efefef;
+  border: 1px solid darkgrey;
+  border-radius: 5px;
+  padding: 5px 0;
+}
+
+#context-menu > h3 {
+  margin: 5px 10px;
+  text-align: center;
+}
+
+#context-menu > div {
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: larger;
+  padding: 0 10px;
+}
+
+#context-menu > div:hover {
+  background-color: #ccc;
+}
+
+#context-menu.hidden {
+  display: none;
 }
