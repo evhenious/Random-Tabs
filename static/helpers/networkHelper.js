@@ -2,9 +2,9 @@ const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
 
 /**
  * @param {string} userName
- * @returns {Promise<Object>} user data if user found
+ * @returns {Promise<Object|null>} user data if user found, null otherwise
  */
-function getUserByName(userName) {
+function getAccountByName(userName) {
   return fetch(`${baseUserApiAddress}/users?username=${userName}`)
     .then((data) => data.json()) // дістаємо наші дані із респонса в форматі JSON
     .then((data = []) => {
@@ -13,7 +13,7 @@ function getUserByName(userName) {
         throw new Error(`User [${userName}] not found...`);
       }
 
-      const [user] = data;
+      const [user = null] = data;
       return user;
     });
 }
@@ -100,4 +100,4 @@ function transformImageUrls(img) {
   };
 }
 
-export { getUserByName, getPostsForUser, getImages };
+export { getAccountByName, getPostsForUser, getImages };
