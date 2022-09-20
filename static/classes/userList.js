@@ -1,22 +1,35 @@
 import { Mountable } from './tabs';
 import { userApi as api } from '../helpers/networkHelper';
 import { getModalInstance } from '../helpers/modal';
+import getEditUserForm from '../helpers/userEditForm';
 
 const editIcon = '&#9998;'; // pencil
-const removeIcon = '&#9760;'; // :)
+const removeIcon = '&#9760;'; // jolly roger
 
+/**
+ * @typedef ContextMenuItem
+ * @type {Object}
+ * @property {string} name menu item name, will be displayed on the screen
+ * @property {ClickHandler} handler main click handler
+ */
+
+// buttons in context menu are described here
+
+/** @type {ContextMenuItem[]} */
 const contextMenuItems = [
   {
     name: `${editIcon} Edit`,
     handler: (userId) => {
+      // TODO modify yourself if you dare :)
       console.log(`Edit user ${userId}`);
+      return Promise.resolve(); // just to keep interface the same
     },
   },
   {
     name: `${removeIcon} Delete`,
-    handler: (userId, callback) => {
+    handler: (userId) => {
       console.warn(`Delete user ${userId}`);
-      api.deleteUser(userId).then(callback);
+      return api.deleteUser(userId);
     },
   },
 ];
@@ -52,7 +65,7 @@ class UserList extends Mountable {
     });
 
     this.#tableRows.classList.add('userlist-rows');
-    api.fetchUsers().then((data) => this.#tableRows.append(...this.#generateRows(data)));
+    this.#refreshTableData();
 
     this.root.append(header, this.#tableRows, footer);
   }
@@ -82,30 +95,21 @@ class UserList extends Mountable {
 
     const createBtn = document.createElement('button');
     createBtn.innerText = 'Create User';
+
     createBtn.addEventListener('click', () => {
       // make new users, not war
-      const createFn = (event) => {
-        event.preventDefault();
-
-        const form = event.target.parentElement;
-        const userData = {
-          name: form.elements[0].value,
-          email: form.elements[1].value,
-          phone: form.elements[2].value,
-        };
-
-        console.log(userData);
+      const createUserFn = (userData) => {
+        // small callback to be executed after successful user creation
         const afterCreate = () => {
           getModalInstance().instance.close(); // hide modal
-          api.fetchUsers()
-            .then((data) => this.#tableRows.replaceChildren(...this.#generateRows(data)));
+          this.#refreshTableData(true);
         };
 
         console.warn('create user');
         api.createUser(userData).then(afterCreate);
       };
 
-      const editForm = makeEditUserForm(createFn);
+      const editForm = getEditUserForm(createUserFn);
       getModalInstance().showModal(editForm);
     });
 
@@ -115,8 +119,18 @@ class UserList extends Mountable {
   }
 
   /**
-   * @param {string|number} userId
-   * @param {{ x: number, y: number }} position
+   * Re-fetches user list data from API and re-sets tabe rows based on new data
+   * @param {boolean} isUpdate FALSE for append, TRUE for replace rows
+   */
+  #refreshTableData(isUpdate = false) {
+    const method = isUpdate ? 'replaceChildren' : 'append';
+    api.fetchUsers().then((data) => this.#tableRows[method](...this.#generateRows(data)));
+  }
+
+  /**
+   * Shows
+   * @param {string|number} userId clicked user id
+   * @param {{ x: number, y: number }} position menu position (top-left corner coords)
    */
   #contextMenu(userId, position) {
     // if it's not the first time menu appears - we will not recreate all elements again,
@@ -130,25 +144,25 @@ class UserList extends Mountable {
     this.#menu.style = `top: ${position.top}px; left: ${position.left}px`;
     this.#menu.classList.remove('hidden');
 
-    const items = contextMenuItems.map((item) => {
+    // transforming config into menu items
+    const menuItems = contextMenuItems.map((item) => {
       const btn = document.createElement('div');
       btn.innerHTML = item.name;
       btn.addEventListener('click', () => {
         this.#menu.classList.add('hidden');
 
-        const afterDelete = () => {
-          api.fetchUsers()
-            .then((data) => this.#tableRows.replaceChildren(...this.#generateRows(data)));
+        const lastAction = () => {
+          this.#refreshTableData(true);
         };
 
-        item.handler(userId, afterDelete);
+        item.handler(userId).then(lastAction);
       });
       return btn;
     });
 
     const idText = document.createElement('h3');
     idText.innerText = `User# ${userId}`;
-    this.#menu.replaceChildren(idText, ...items);
+    this.#menu.replaceChildren(idText, ...menuItems);
 
     this.root.append(this.#menu);
   }
@@ -186,38 +200,5 @@ class UserList extends Mountable {
     });
   }
 }
-
-function makeEditUserForm (onCreate) {
-  const form = document.createElement('form');
-  form.classList.add('user-edit-form');
-
-  const nameInput = document.createElement('input');
-  nameInput.id = 'user-name';
-  const nameLabel = document.createElement('label');
-  nameLabel.setAttribute('for', 'user-name');
-  nameLabel.innerText = 'User Name';
-
-  const emailInput = document.createElement('input');
-  emailInput.id = 'user-email';
-  const emailLabel = document.createElement('label');
-  emailLabel.setAttribute('for', 'user-email');
-  emailLabel.innerText = 'User Email Address';
-
-  const phoneInput = document.createElement('input');
-  phoneInput.id = 'user-phone';
-  const phoneLabel = document.createElement('label');
-  phoneLabel.setAttribute('for', 'user-phone');
-  phoneLabel.innerText = 'User Tel #';
-
-  const btn = document.createElement('button');
-  btn.innerText = 'create';
-  btn.addEventListener('click', onCreate);
-
-  form.append(nameLabel, nameInput, emailLabel, emailInput, phoneLabel, phoneInput, btn);
-
-  return form;
-}
-
-
 
 export default UserList;

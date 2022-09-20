@@ -29,7 +29,12 @@
   grid-column: 1 / span 4;
   border-top: 1px solid darkgrey;
   margin-top: 5px;
-  padding: 2px;
+  padding: 10px 20px 0;
+}
+
+.userlist-footer > button {
+  padding: 5px 10px;
+  font-size: inherit;
 }
 
 .userlist-rows {
@@ -84,7 +89,8 @@
 .user-edit-form {
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 15px;
 }
+
