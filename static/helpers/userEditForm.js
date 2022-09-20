@@ -6,16 +6,23 @@ const formControlsConfig = [
 
 /**
  * Creates user edit form
- * @param {Function} onCreate click handler for form button. Will receive userData as parameter
+ * @param {Function} onSubmit click handler for form button. Will receive userData as parameter
+ * @param {Object} userData
+ * @param {Object} config
  * @returns {HTMLFormElement}
  */
-function getEditUserForm(onCreate) {
+function getEditUserForm(onSubmit, userData = {}, config = {}) {
   const form = document.createElement('form');
   form.classList.add('user-edit-form');
+
+  if (userData.id) {
+    form.setAttribute('data-user-id', userData.id);
+  }
 
   const formControls = formControlsConfig.map((item) => {
     const inputElem = document.createElement('input');
     inputElem.id = `user-${item.id}`;
+    inputElem.value = userData[item.id] || '';
 
     const labelElem = document.createElement('label');
     labelElem.setAttribute('for', inputElem.id);
@@ -29,7 +36,7 @@ function getEditUserForm(onCreate) {
   });
 
   const btn = document.createElement('button');
-  btn.innerText = 'create';
+  btn.innerText = config.buttonText || 'Create User';
   btn.addEventListener('click', (event) => {
     event.preventDefault();
 
@@ -40,7 +47,7 @@ function getEditUserForm(onCreate) {
       return acc;
     }, {});
 
-    onCreate(userData);
+    onSubmit(userData);
   });
 
   form.append(...formControls, btn);

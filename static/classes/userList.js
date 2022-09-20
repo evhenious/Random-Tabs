@@ -20,17 +20,26 @@ const removeIcon = '&#9760;'; // jolly roger
 const contextMenuItems = [
   {
     name: `${editIcon} Edit`,
-    handler: (userId) => {
-      // TODO modify yourself if you dare :)
+    // callback Kung-Fu as it is
+    handler: (userId, lastAction) => {
       console.log(`Edit user ${userId}`);
-      return Promise.resolve(); // just to keep interface the same
+      api.getUserById(userId).then((userData) => {
+        const onFormSave = (editedUserData) => {
+          api.updateUser(userId, editedUserData).then(() => {
+            getModalInstance().instance.close();
+            lastAction();
+          });
+        };
+        const form = getEditUserForm(onFormSave, userData, { buttonText: 'Save Changes' });
+        getModalInstance().showModal(form);
+      });
     },
   },
   {
     name: `${removeIcon} Delete`,
-    handler: (userId) => {
+    handler: (userId, lastAction) => {
       console.warn(`Delete user ${userId}`);
-      return api.deleteUser(userId);
+      api.deleteUser(userId).then(lastAction);
     },
   },
 ];
@@ -125,7 +134,7 @@ class UserList extends Mountable {
    */
   #refreshTableData(isUpdate = false) {
     const method = isUpdate ? 'replaceChildren' : 'append';
-    api.fetchUsers().then((data) => this.#tableRows[method](...this.#generateRows(data)));
+    api.getUsersList().then((data) => this.#tableRows[method](...this.#generateRows(data)));
   }
 
   /**
@@ -154,8 +163,8 @@ class UserList extends Mountable {
       const btn = document.createElement('div');
       btn.innerHTML = item.name;
       btn.addEventListener('click', () => {
-        this.#menu.classList.add('hidden');
-        item.handler(userId).then(lastAction);
+        this.#menu.classList.add('hidden'); // hiding context menu itself
+        item.handler(userId, lastAction);
       });
       return btn;
     });

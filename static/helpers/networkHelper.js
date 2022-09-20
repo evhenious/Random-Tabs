@@ -100,13 +100,14 @@ function transformImageUrls(img) {
   };
 }
 
+const userApiBase = 'http://localhost:4321/api/users';
+
 /**
  * Get list of all users
  * @returns {Promise<Object[]>}
  */
-function fetchUsers() {
-  return fetch('http://localhost:4321/api/users')
-    .then((resp) => resp.json());
+function getUsersList() {
+  return fetch(userApiBase).then((resp) => resp.json());
 }
 
 /**
@@ -115,8 +116,8 @@ function fetchUsers() {
  * @returns {Promise}
  */
 function deleteUser(userId) {
-  return fetch(`http://localhost:4321/api/users/${userId}`, {
-    method: 'DELETE'
+  return fetch(`${userApiBase}/${userId}`, {
+    method: 'DELETE',
   });
 }
 
@@ -126,12 +127,38 @@ function deleteUser(userId) {
  * @returns {Promise}
  */
 function createUser(userData = {}) {
-  return fetch('http://localhost:4321/api/users', {
+  return fetch(userApiBase, {
     method: 'POST',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    body: JSON.stringify(userData)
+    body: JSON.stringify(userData),
+  }).then((resp) => resp.json());
+}
+
+/**
+ * Get a user by user id
+ * @param {string|number} userId
+ * @returns {Promise<Object>}
+ */
+function getUserById(userId) {
+  return fetch(`${userApiBase}/${userId}`).then((resp) => resp.json());
+}
+
+/**
+ *
+ * Updates existing user info
+ * @param {number|string} userId
+ * @param {Object} userData
+ * @returns {Promise}
+ */
+function updateUser(userId, userData) {
+  return fetch(`${userApiBase}/${userId}`, {
+    method: 'PATCH',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(userData),
   });
 }
 
@@ -139,9 +166,11 @@ function createUser(userData = {}) {
  * Central exported point for user api functionality
  */
 const userApi = {
-  fetchUsers,
+  getUsersList,
+  getUserById,
   createUser,
-  deleteUser
+  updateUser,
+  deleteUser,
 };
 
 export { getAccountByName, getPostsForUser, getImages, userApi };
