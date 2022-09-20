@@ -34,6 +34,20 @@ app.get('/api/users', queryValidator, async (req, res, next) => {
   }
 });
 
+app.get('/api/users/:id', pathParamValidator, async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const [user] = await userModel.findUsersBy({ id });
+    if (!user) {
+      return res.sendStatus(404);
+    }
+
+    res.status(200).send(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.post('/api/users', userValidator, async (req, res, next) => {
   try {
     const { body } = req;

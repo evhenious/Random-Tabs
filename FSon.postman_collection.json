@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "3c685eb7-9140-43bf-8286-fd2b691d4d0d",
+		"_postman_id": "a58b6490-b6f0-4f65-962c-479ba667e7b1",
 		"name": "FSon",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13920388"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -12,7 +11,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:4321/api/users?limit=3",
+					"raw": "localhost:4321/api/users",
 					"host": [
 						"localhost"
 					],
@@ -28,13 +27,35 @@
 							"disabled": true
 						},
 						{
-							"key": "limit",
-							"value": "3"
-						},
-						{
 							"key": "test",
 							"value": "t",
 							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET user by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4321/api/users/:id",
+					"host": [
+						"localhost"
+					],
+					"port": "4321",
+					"path": [
+						"api",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
 						}
 					]
 				}
