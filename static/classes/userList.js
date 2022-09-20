@@ -55,8 +55,6 @@ class UserList extends Mountable {
     this.root.append(header, this.#tableRows, footer);
   }
 
-
-
   /**
    * Prepares table header with column titles,
    * according to names and order in supplied **config**
@@ -94,6 +92,8 @@ class UserList extends Mountable {
     if (!this.#menu) {
       this.#menu = document.createElement('div');
       this.#menu.id = 'context-menu';
+      // we want to hide the context menu when mouse leaves it
+      this.#menu.addEventListener('mouseleave', () => this.#menu.classList.add('hidden'));
     }
     this.#menu.style = `top: ${position.top}px; left: ${position.left}px`;
     this.#menu.classList.remove('hidden');
@@ -109,11 +109,8 @@ class UserList extends Mountable {
     });
 
     const idText = document.createElement('h3');
-    idText.innerText = `User ${userId}`;
+    idText.innerText = `User# ${userId}`;
     this.#menu.replaceChildren(idText, ...items);
-
-    // we want to hide the context menu when mouse leaves it
-    this.#menu.addEventListener('mouseleave', () => this.#menu.classList.add('hidden'));
 
     this.root.append(this.#menu);
   }

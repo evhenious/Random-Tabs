@@ -12,7 +12,7 @@
     "build-css": "esbuild ./static/index.css --bundle --minify --outfile=./dist/index.css",
     "build": "npm run copy-assets && npm run build-js && npm run build-css",
     "start-dev": "npm run copy-assets && node ./esbuild-serve-dev & nodemon ./backend/index.js",
-    "start-dev-parcel": "npx parcel ./static/index.html"
+    "start-dev-parcel": "npx parcel ./static/index.html & nodemon ./backend/index.js"
   },
   "repository": {
     "type": "git",

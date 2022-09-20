@@ -5,18 +5,20 @@ import * as basicLightbox from 'basiclightbox';
 /**
  * @typedef Modal
  * @type {Object}
- * @property {Object} instance the ref to basicLightbox modal itself, just in case we need it
+ * @property {Object} instance the ref to basicLightbox modal itself - just in case we would need it
  * @property {Function} showModalImage the way to show the modal with predefined **image**
+ * @property {Function} showModal the way to show the modal with **any** given content
  */
 
 /** @type {Modal} */
 const modalInstance = {
   instance: null,
   showModalImage,
+  showModal
 };
 
 /**
- * Returns ref to modal instance.
+ * _Main_ function to work with modal. Returns ref to modal instance.
  * Handles modal init process if it's the very first attempt to use modal
  * @returns {Modal} modalInstance
  */
@@ -44,15 +46,25 @@ function showModalImage(src = '/images/empty.png') {
   image.setAttribute('height', 480);
   image.src = src;
 
-  setModalContent(image);
+  _setModalContent(image);
   modalInstance.instance.show();
 }
 
 /**
- * Generic way to set **anything** into modal.
+ * Convenient wrapper to put anything into the modal.
+ *  @param {HTMLElement} content
+ */
+ function showModal(content) {
+  _setModalContent(content);
+  modalInstance.instance.show();
+}
+
+/**
+ * Generic way to set **anything** into modal. Mainly not from direct usage
+ * @private
  * @param {HTMLElement} content
  */
-function setModalContent(content) {
+function _setModalContent(content) {
   const modalRoot = modalInstance.instance.element().querySelector('.modal');
   modalRoot.replaceChildren(content);
 }
