@@ -1,5 +1,6 @@
 import { Mountable } from './tabs';
 import { userApi as api } from '../helpers/networkHelper';
+import { getModalInstance } from '../helpers/modal';
 
 const editIcon = '&#9998;'; // pencil
 const removeIcon = '&#9760;'; // :)
@@ -79,7 +80,37 @@ class UserList extends Mountable {
     const footerDiv = document.createElement('div');
     footerDiv.classList.add('userlist-footer');
 
-    footerDiv.innerText = 'here is a footer';
+    const createBtn = document.createElement('button');
+    createBtn.innerText = 'Create User';
+    createBtn.addEventListener('click', () => {
+      // make new users, not war
+      const createFn = (event) => {
+        event.preventDefault();
+
+        const form = event.target.parentElement;
+        const userData = {
+          name: form.elements[0].value,
+          email: form.elements[1].value,
+          phone: form.elements[2].value,
+        };
+
+        console.log(userData);
+        const afterCreate = () => {
+          getModalInstance().instance.close(); // hide modal
+          api.fetchUsers()
+            .then((data) => this.#tableRows.replaceChildren(...this.#generateRows(data)));
+        };
+
+        console.warn('create user');
+        api.createUser(userData).then(afterCreate);
+      };
+
+      const editForm = makeEditUserForm(createFn);
+      getModalInstance().showModal(editForm);
+    });
+
+    footerDiv.append(createBtn);
+
     return footerDiv;
   }
 
@@ -155,5 +186,38 @@ class UserList extends Mountable {
     });
   }
 }
+
+function makeEditUserForm (onCreate) {
+  const form = document.createElement('form');
+  form.classList.add('user-edit-form');
+
+  const nameInput = document.createElement('input');
+  nameInput.id = 'user-name';
+  const nameLabel = document.createElement('label');
+  nameLabel.setAttribute('for', 'user-name');
+  nameLabel.innerText = 'User Name';
+
+  const emailInput = document.createElement('input');
+  emailInput.id = 'user-email';
+  const emailLabel = document.createElement('label');
+  emailLabel.setAttribute('for', 'user-email');
+  emailLabel.innerText = 'User Email Address';
+
+  const phoneInput = document.createElement('input');
+  phoneInput.id = 'user-phone';
+  const phoneLabel = document.createElement('label');
+  phoneLabel.setAttribute('for', 'user-phone');
+  phoneLabel.innerText = 'User Tel #';
+
+  const btn = document.createElement('button');
+  btn.innerText = 'create';
+  btn.addEventListener('click', onCreate);
+
+  form.append(nameLabel, nameInput, emailLabel, emailInput, phoneLabel, phoneInput, btn);
+
+  return form;
+}
+
+
 
 export default UserList;

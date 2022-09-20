@@ -109,6 +109,11 @@ function fetchUsers() {
     .then((resp) => resp.json());
 }
 
+/**
+ * Deletes user
+ * @param {number|string} userId
+ * @returns {Promise}
+ */
 function deleteUser(userId) {
   return fetch(`http://localhost:4321/api/users/${userId}`, {
     method: 'DELETE'
@@ -116,10 +121,26 @@ function deleteUser(userId) {
 }
 
 /**
- * Central point for user api functionality
+ * Creates new user
+ * @param {Object} userData
+ * @returns {Promise}
+ */
+function createUser(userData = {}) {
+  return fetch('http://localhost:4321/api/users', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(userData)
+  });
+}
+
+/**
+ * Central exported point for user api functionality
  */
 const userApi = {
   fetchUsers,
+  createUser,
   deleteUser
 };
 
