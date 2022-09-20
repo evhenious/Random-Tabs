@@ -19,9 +19,10 @@ function validateNotEmptyString(value) {
   return null;
 }
 
-function userValidator(req, _res, next) {
+function postUserValidator(req, _res, next) {
   Object.keys(fields).forEach((key) => {
     const { required, validate } = fields[key];
+
     if (!(key in req.body) && required) {
       throw new Error(`[${key}] field is required`);
     }
@@ -35,6 +36,27 @@ function userValidator(req, _res, next) {
   next();
 }
 
+function patchUserValidator(req, _res, next) {
+  const patchFields = Object.keys(req.body);
+  if (!patchFields.length) {
+    throw new Error('user data not provided');
+  }
+
+  Object.keys(fields).forEach((key) => {
+    const { required, validate } = fields[key];
+
+    if (key in req.body && required) {
+      const error = validate(req.body[key]);
+      if (error) {
+        throw new Error(`[${key}] ${error}`);
+      }
+    }
+  });
+
+  next();
+}
+
 module.exports = {
-  userValidator,
+  postUserValidator,
+  patchUserValidator,
 };
