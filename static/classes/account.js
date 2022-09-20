@@ -1,5 +1,5 @@
 import { getMapIframe } from '../helpers/mapHelper';
-import { getPostsForUser, getUserByName } from '../helpers/networkHelper';
+import { getPostsForUser, getAccountByName } from '../helpers/networkHelper';
 import { Mountable } from './tabs';
 
 const defaultInputPlaceholder = 'Please type your login';
@@ -38,7 +38,7 @@ class Account extends Mountable {
 
     //! fetch user
     const userName = this.#usernameInput.value;
-    getUserByName(userName)
+    getAccountByName(userName)
       // якщо юзер знайдений - пробуєм дістати його пости по юзер айді
       .then(
         (user) => getPostsForUser(user.id).then((posts) => ({ user, posts }))

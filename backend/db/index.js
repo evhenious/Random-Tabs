@@ -10,7 +10,8 @@ const dbFileName = 'database.db';
 const messages = {
   _default: 'server error',
   'NOT NULL constraint failed': 'field cannot be empty',
-  'UNIQUE constraint failed': 'already registered in the system'
+  'UNIQUE constraint failed': 'already registered in the system',
+  'no such column': 'field is not supported'
 };
 
 class DbHelper {
@@ -86,10 +87,11 @@ class DbHelper {
    * @returns {string}
    */
   #parseDbError(err) {
-    const [, description, cause] = err.message.split(':');
-    const fieldName = cause?.split('.')[1];
+    const [type, description, cause] = err.message.split(':');
 
-    return `[${fieldName}] ${messages[description.trim()] || messages._default}`;
+    const fieldName = type === 'SQLITE_ERROR' ? cause : cause?.split('.')[1];
+
+    return `[${fieldName.trim()}] ${messages[description.trim()] || messages._default}`;
   }
 }
 

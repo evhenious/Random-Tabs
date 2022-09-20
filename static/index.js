@@ -8,14 +8,24 @@ import Blog from './classes/blog.js';
 import Gallery from './classes/gallery.js';
 import ProgressBar from './classes/progressBar.js';
 import { Tabs } from './classes/tabs';
-import { initModal, setModalImage } from './helpers/modal.js';
+import { getModalInstance } from './helpers/modal.js';
+import UserList from './classes/userList';
 
-initLesson('JS Lesson 20', 'Client-server communication, REST API part 2');
+initLesson('JS Pre-Final Lesson 21', 'CRUD, REST API part 3');
 
-const modalInstance = initModal();
+const modalInstance = getModalInstance();
 const galleryOptions = {
   lazy: true,
   placeholder: '/images/empty.png',
+};
+
+const userListConfig = {
+  columns: [
+    { id: 'id', title: 'ID' },
+    { id: 'name', title: 'Name' },
+    { id: 'email', title: 'Email' },
+    { id: 'phone', title: 'Tel. #' },
+  ],
 };
 
 // main tab parts
@@ -23,9 +33,10 @@ const progressBar = new ProgressBar('progress');
 
 // adding simple tabs to the page
 const tabConfig = [
-  { name: 'Art Gallery', item: Gallery, args: [galleryOptions, handleClickOnImage], default: true },
+  { name: 'Art Gallery', item: Gallery, args: [galleryOptions, handleClickOnImage] },
   { name: 'Microblog', item: Blog },
   { name: 'Account Search', item: Account },
+  { name: 'User List', item: UserList, args: [userListConfig], default: true },
 ];
 
 new Tabs('page-tabs', tabConfig);
@@ -35,8 +46,7 @@ new Tabs('page-tabs', tabConfig);
  * @param {MouseEvent} event
  */
 function handleClickOnImage({ target }) {
-  setModalImage(target.dataset.source);
-  modalInstance.show();
+  modalInstance.showModalImage(target.dataset.source);
 }
 
 // not quicker than once per 120 millis
@@ -57,5 +67,3 @@ function getProgressLength() {
 
   return Math.round(scrollPercent * 100);
 }
-
-

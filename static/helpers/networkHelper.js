@@ -2,9 +2,9 @@ const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
 
 /**
  * @param {string} userName
- * @returns {Promise<Object>} user data if user found
+ * @returns {Promise<Object|null>} user data if user found, null otherwise
  */
-function getUserByName(userName) {
+function getAccountByName(userName) {
   return fetch(`${baseUserApiAddress}/users?username=${userName}`)
     .then((data) => data.json()) // дістаємо наші дані із респонса в форматі JSON
     .then((data = []) => {
@@ -13,7 +13,7 @@ function getUserByName(userName) {
         throw new Error(`User [${userName}] not found...`);
       }
 
-      const [user] = data;
+      const [user = null] = data;
       return user;
     });
 }
@@ -100,4 +100,77 @@ function transformImageUrls(img) {
   };
 }
 
-export { getUserByName, getPostsForUser, getImages };
+const userApiBase = 'http://localhost:4321/api/users';
+
+/**
+ * Get list of all users
+ * @returns {Promise<Object[]>}
+ */
+function getUsersList() {
+  return fetch(userApiBase).then((resp) => resp.json());
+}
+
+/**
+ * Deletes user
+ * @param {number|string} userId
+ * @returns {Promise}
+ */
+function deleteUser(userId) {
+  return fetch(`${userApiBase}/${userId}`, {
+    method: 'DELETE',
+  });
+}
+
+/**
+ * Creates new user
+ * @param {Object} userData
+ * @returns {Promise}
+ */
+function createUser(userData = {}) {
+  return fetch(userApiBase, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  }).then((resp) => resp.json());
+}
+
+/**
+ * Get a user by user id
+ * @param {string|number} userId
+ * @returns {Promise<Object>}
+ */
+function getUserById(userId) {
+  return fetch(`${userApiBase}/${userId}`).then((resp) => resp.json());
+}
+
+/**
+ *
+ * Updates existing user info
+ * @param {number|string} userId
+ * @param {Object} userData
+ * @returns {Promise}
+ */
+function updateUser(userId, userData) {
+  return fetch(`${userApiBase}/${userId}`, {
+    method: 'PATCH',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
+}
+
+/**
+ * Central exported point for user api functionality
+ */
+const userApi = {
+  getUsersList,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};
+
+export { getAccountByName, getPostsForUser, getImages, userApi };

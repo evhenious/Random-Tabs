@@ -11,7 +11,7 @@ const dbHelper = require('./db').getInstance();
 const UserModel = require('./models/user_model');
 const { queryValidator } = require('./utils/query_validator');
 const { pathParamValidator } = require('./utils/param_validator');
-const { userValidator } = require('./utils/user_validator');
+const { postUserValidator, patchUserValidator } = require('./utils/user_validator');
 
 app.use(cors());
 app.use(express.json());
@@ -48,7 +48,7 @@ app.get('/api/users/:id', pathParamValidator, async (req, res, next) => {
   }
 });
 
-app.post('/api/users', userValidator, async (req, res, next) => {
+app.post('/api/users', postUserValidator, async (req, res, next) => {
   try {
     const { body } = req;
     const resp = await userModel.createUser(body);
@@ -58,7 +58,7 @@ app.post('/api/users', userValidator, async (req, res, next) => {
   }
 });
 
-app.patch('/api/users/:id', pathParamValidator, userValidator, async (req, res, next) => {
+app.patch('/api/users/:id', pathParamValidator, patchUserValidator, async (req, res, next) => {
   const { id } = req.params;
   const { body } = req;
   try {

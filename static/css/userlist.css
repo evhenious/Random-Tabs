@@ -1,0 +1,116 @@
+#userlist {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 1fr;
+}
+
+.userlist-header {
+  display: contents;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.userlist-header > div {
+  background-color: #ddd;
+  border-left: 1px solid darkgrey;
+  border-top: 1px solid darkgrey;
+  border-bottom: 1px solid darkgrey;
+  padding: 5px;
+}
+
+.userlist-header :first-child {
+  text-align: center;
+}
+
+.userlist-header :last-child {
+  border-right: 1px solid darkgrey;
+}
+
+.userlist-footer {
+  grid-column: 1 / span 4;
+  border-top: 1px solid darkgrey;
+  margin-top: 5px;
+  padding: 10px 20px 0;
+}
+
+.userlist-footer > button {
+  padding: 5px 10px;
+  font-size: inherit;
+}
+
+.userlist-rows {
+  display: contents;
+}
+
+.row {
+  display: contents;
+}
+
+.row :first-child {
+  text-align: center;
+  font: message-box;
+  border-left: none;
+}
+
+.cell {
+  padding: 5px;
+  border-left: 1px solid darkgrey;
+  border-bottom: 1px solid #ccc;
+  cursor: cell;
+}
+
+#context-menu {
+  position: absolute;
+  background-color: #efefef;
+  border: 1px solid darkgrey;
+  border-radius: 5px;
+  padding: 5px 0;
+}
+
+#context-menu > h3 {
+  margin: 5px 10px;
+  text-align: center;
+}
+
+#context-menu > div {
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: larger;
+  padding: 0 10px;
+}
+
+#context-menu > div:hover {
+  background-color: #ccc;
+}
+
+#context-menu.hidden {
+  display: none;
+}
+
+.user-edit-form {
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  width: 300px;
+}
+
+.user-edit-form > div {
+  display: contents;
+}
+
+.user-edit-form label {
+  font-size: 0.9em;
+}
+
+.user-edit-form input {
+  margin: 0 10px 10px;
+  font-size: 1em;
+}
+
+.user-edit-form button {
+  padding: 5px 10px;
+  font-size: inherit;
+  background-color: #ccdddd;
+  border: 1px solid darkgrey;
+}
