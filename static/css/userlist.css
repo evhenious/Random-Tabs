@@ -92,5 +92,25 @@
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 15px;
+  width: 300px;
 }
 
+.user-edit-form > div {
+  display: contents;
+}
+
+.user-edit-form label {
+  font-size: 0.9em;
+}
+
+.user-edit-form input {
+  margin: 0 10px 10px;
+  font-size: 1em;
+}
+
+.user-edit-form button {
+  padding: 5px 10px;
+  font-size: inherit;
+  background-color: #ccdddd;
+  border: 1px solid darkgrey;
+}

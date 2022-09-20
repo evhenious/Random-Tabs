@@ -13,9 +13,10 @@ const removeIcon = '&#9760;'; // jolly roger
  * @property {ClickHandler} handler main click handler
  */
 
-// buttons in context menu are described here
-
-/** @type {ContextMenuItem[]} */
+/**
+ * buttons in context menu are described here
+ * @type {ContextMenuItem[]}
+ * */
 const contextMenuItems = [
   {
     name: `${editIcon} Edit`,
@@ -96,15 +97,15 @@ class UserList extends Mountable {
     const createBtn = document.createElement('button');
     createBtn.innerText = 'Create User';
 
+    // small callback to be executed after successful user creation
+    const afterCreate = () => {
+      getModalInstance().instance.close(); // hide modal
+      this.#refreshTableData(true);
+    };
+
     createBtn.addEventListener('click', () => {
       // make new users, not war
       const createUserFn = (userData) => {
-        // small callback to be executed after successful user creation
-        const afterCreate = () => {
-          getModalInstance().instance.close(); // hide modal
-          this.#refreshTableData(true);
-        };
-
         console.warn('create user');
         api.createUser(userData).then(afterCreate);
       };
@@ -128,7 +129,7 @@ class UserList extends Mountable {
   }
 
   /**
-   * Shows
+   * Shows context menu with menu iems based on config in **contextMenuItems**
    * @param {string|number} userId clicked user id
    * @param {{ x: number, y: number }} position menu position (top-left corner coords)
    */
@@ -144,17 +145,16 @@ class UserList extends Mountable {
     this.#menu.style = `top: ${position.top}px; left: ${position.left}px`;
     this.#menu.classList.remove('hidden');
 
+    const lastAction = () => {
+      this.#refreshTableData(true);
+    };
+
     // transforming config into menu items
     const menuItems = contextMenuItems.map((item) => {
       const btn = document.createElement('div');
       btn.innerHTML = item.name;
       btn.addEventListener('click', () => {
         this.#menu.classList.add('hidden');
-
-        const lastAction = () => {
-          this.#refreshTableData(true);
-        };
-
         item.handler(userId).then(lastAction);
       });
       return btn;

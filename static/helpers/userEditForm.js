@@ -6,7 +6,7 @@ const formControlsConfig = [
 
 /**
  * Creates user edit form
- * @param {Function} onCreate click handler for form button
+ * @param {Function} onCreate click handler for form button. Will receive userData as parameter
  * @returns {HTMLFormElement}
  */
 function getEditUserForm(onCreate) {
@@ -16,11 +16,16 @@ function getEditUserForm(onCreate) {
   const formControls = formControlsConfig.map((item) => {
     const inputElem = document.createElement('input');
     inputElem.id = `user-${item.id}`;
+
     const labelElem = document.createElement('label');
     labelElem.setAttribute('for', inputElem.id);
     labelElem.innerText = item.label;
 
-    return inputElem;
+    // to conveniently manage input and it's label
+    const wrapper = document.createElement('div');
+    wrapper.append(labelElem, inputElem);
+
+    return wrapper;
   });
 
   const btn = document.createElement('button');
