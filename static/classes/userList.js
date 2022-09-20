@@ -13,8 +13,9 @@ const contextMenuItems = [
   },
   {
     name: `${removeIcon} Delete`,
-    handler: (userId) => {
-      console.log(`Delete user ${userId}`);
+    handler: (userId, callback) => {
+      console.warn(`Delete user ${userId}`);
+      api.deleteUser(userId).then(callback);
     },
   },
 ];
@@ -103,7 +104,13 @@ class UserList extends Mountable {
       btn.innerHTML = item.name;
       btn.addEventListener('click', () => {
         this.#menu.classList.add('hidden');
-        item.handler(userId);
+
+        const afterDelete = () => {
+          api.fetchUsers()
+            .then((data) => this.#tableRows.replaceChildren(...this.#generateRows(data)));
+        };
+
+        item.handler(userId, afterDelete);
       });
       return btn;
     });

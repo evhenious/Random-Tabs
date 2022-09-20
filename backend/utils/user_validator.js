@@ -38,8 +38,9 @@ function postUserValidator(req, _res, next) {
   Object.keys(fields).forEach((key) => {
     const { required, validate } = fields[key];
 
-    if (!(key in req.body) && required) {
-      throw new Error(`[${key}] field is required`);
+    if (!(key in req.body)) {
+      if (required) throw new Error(`[${key}] field is required`);
+      return;
     }
 
     const error = validate(req.body[key]);

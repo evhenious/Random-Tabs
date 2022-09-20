@@ -100,16 +100,19 @@ function transformImageUrls(img) {
   };
 }
 
+/**
+ * Get list of all users
+ * @returns {Promise<Object[]>}
+ */
 function fetchUsers() {
-  //! just a template, needs rework here
-  return Promise.resolve([
-    {
-      id: 0,
-      name: 'static user',
-      email: 'test@test.com',
-      phone: '999-789-456-2321',
-    },
-  ]);
+  return fetch('http://localhost:4321/api/users')
+    .then((resp) => resp.json());
+}
+
+function deleteUser(userId) {
+  return fetch(`http://localhost:4321/api/users/${userId}`, {
+    method: 'DELETE'
+  });
 }
 
 /**
@@ -117,6 +120,7 @@ function fetchUsers() {
  */
 const userApi = {
   fetchUsers,
+  deleteUser
 };
 
 export { getAccountByName, getPostsForUser, getImages, userApi };
