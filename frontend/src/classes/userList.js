@@ -3,8 +3,10 @@ import { userApi as api } from '../helpers/networkHelper';
 import { getModalInstance } from '../helpers/modal';
 import { getEditUserForm } from '../helpers/userEditForm';
 
-const editIcon = '&#9998;'; // pencil
-const removeIcon = '&#9760;'; // jolly roger
+const ICONS = {
+  edit: '&#9998;', // pencil
+  remove: '&#9760;' // jolly roger
+};
 
 /**
  * @typedef ContextMenuItem
@@ -19,7 +21,7 @@ const removeIcon = '&#9760;'; // jolly roger
  * */
 const contextMenuItems = [
   {
-    name: `${editIcon} Edit`,
+    name: `${ICONS.edit} Edit`,
     // callback Kung-Fu as it is
     handler: (userId, lastAction) => {
       console.log(`Edit user ${userId}`);
@@ -40,7 +42,7 @@ const contextMenuItems = [
     },
   },
   {
-    name: `${removeIcon} Delete`,
+    name: `${ICONS.remove} Delete`,
     handler: (userId, lastAction) => {
       console.warn(`Delete user ${userId}`);
       api.deleteUser(userId).then(lastAction);

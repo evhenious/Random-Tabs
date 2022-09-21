@@ -1,5 +1,3 @@
-$context-menu-bg-color: #f5f5f5;
-
 #userlist {
   display: grid;
   grid-template-columns: 40px 1fr 1fr 1fr;
@@ -39,7 +37,8 @@ $context-menu-bg-color: #f5f5f5;
   }
 }
 
-.userlist-rows, .row {
+.userlist-rows,
+.row {
   display: contents;
 }
 
@@ -89,61 +88,6 @@ $context-menu-bg-color: #f5f5f5;
 
     &:hover {
       background-color: $lighter-grey;
-    }
-  }
-}
-
-.user-edit-form {
-  display: flex;
-  flex-direction: column;
-  background-color: $context-menu-bg-color;
-  border: 1px solid $dark-grey;
-  border-radius: 15px;
-  width: 300px;
-
-  .edit-form-title {
-    display: block;
-    text-align: center;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  & > div {
-    display: contents;
-
-    label {
-      font-size: 0.9em;
-      color: #4d4d4d;
-    }
-
-    input {
-      margin: 0 10px 10px;
-      font-size: 1em;
-    }
-  }
-
-  button {
-    font-size: inherit;
-    background-color: #ccdddd;
-
-    &:hover {
-      background-color: #cfe6d9;
-    }
-  }
-
-  .errors {
-    display: block;
-    position: absolute;
-
-
-    .validation-message {
-      background-color: #ffff8f;
-      font-size: 1em;
-      padding: 5px 10px;
-
-      &:first-child {
-        margin-top: 15px;
-      }
     }
   }
 }
