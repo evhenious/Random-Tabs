@@ -1,10 +1,12 @@
 import { Mountable } from './tabs';
 import { userApi as api } from '../helpers/networkHelper';
 import { getModalInstance } from '../helpers/modal';
-import getEditUserForm from '../helpers/userEditForm';
+import { getEditUserForm } from '../helpers/userEditForm';
 
-const editIcon = '&#9998;'; // pencil
-const removeIcon = '&#9760;'; // jolly roger
+const ICONS = {
+  edit: '&#9998;', // pencil
+  remove: '&#9760;' // jolly roger
+};
 
 /**
  * @typedef ContextMenuItem
@@ -19,7 +21,7 @@ const removeIcon = '&#9760;'; // jolly roger
  * */
 const contextMenuItems = [
   {
-    name: `${editIcon} Edit`,
+    name: `${ICONS.edit} Edit`,
     // callback Kung-Fu as it is
     handler: (userId, lastAction) => {
       console.log(`Edit user ${userId}`);
@@ -30,13 +32,17 @@ const contextMenuItems = [
             lastAction();
           });
         };
-        const form = getEditUserForm(onFormSave, userData, { buttonText: 'Save Changes' });
+        const formConfig = {
+          buttonText: 'Save Changes',
+          title: 'Edit User Details'
+        };
+        const form = getEditUserForm(onFormSave, userData, formConfig);
         getModalInstance().showModal(form);
       });
     },
   },
   {
-    name: `${removeIcon} Delete`,
+    name: `${ICONS.remove} Delete`,
     handler: (userId, lastAction) => {
       console.warn(`Delete user ${userId}`);
       api.deleteUser(userId).then(lastAction);
