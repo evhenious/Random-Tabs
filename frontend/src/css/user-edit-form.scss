@@ -1,0 +1,50 @@
+.user-edit-form {
+  display: flex;
+  flex-direction: column;
+  background-color: $context-menu-bg-color;
+  border: 1px solid $dark-grey;
+  border-radius: 15px;
+  width: 300px;
+
+  .edit-form-title {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  & > div {
+    display: contents;
+
+    label {
+      font-size: 0.9em;
+      color: $almost-black
+    }
+
+    input {
+      margin: 0 10px 10px;
+      font-size: 1em;
+
+      &.invalid {
+        @extend .generic-invalid;
+        border-width: 1px;
+        margin: 0 10px 0;
+      }
+    }
+  }
+
+  button {
+    font-size: inherit;
+    background-color: #ccdddd;
+
+    &:hover {
+      background-color: #cfe6d9;
+    }
+  }
+
+  .form-error {
+    font-size: 0.9em;
+    color: $invalid-red;
+    margin-bottom: 10px;
+  }
+}

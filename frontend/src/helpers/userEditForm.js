@@ -1,4 +1,3 @@
-import { divide } from 'lodash';
 import * as yup from 'yup';
 
 const formControlsConfig = [
@@ -12,8 +11,62 @@ const CREATE_USER = 'Create User';
 const userSchema = yup.object().shape({
   name: yup.string().required('Name cannot be empty'),
   email: yup.string().email('Invalid email format').required('Email cannot be empty'),
-  phone: yup.string().matches(/(\d| |\+|-|\(|\)|\.)/, { excludeEmptyString: true, message: 'Invalid phone format' })
+  phone: yup.string().matches(/(\d| |\+|-|\(|\)|\.)/, { excludeEmptyString: true, message: 'Invalid phone format' }),
 });
+
+/**
+ * Cleans up invalid field state
+ * @param {InputEvent} event
+ */
+function cleanFieldState(event) {
+  if (event.target.classList.contains('invalid')) {
+    event.target.classList.remove('invalid');
+    document.getElementById(`${event.target.id}-error`).innerText = '';
+  }
+}
+
+/**
+ * Parses validation error and shows error messages
+ * @param {yup.ValidationError} error
+ */
+function setErrorState(error) {
+  const issues = error.inner.map(({ path, message }) => ({ path, message }));
+  console.warn(issues);
+
+  issues.forEach((issue) => {
+    document.getElementById(`user-${issue.path}-error`).innerText = issue.message;
+    document.getElementById(`user-${issue.path}`).classList.add('invalid');
+  });
+}
+
+/**
+ * each input has it's label and specific place to show validation error
+ * @param {Object} userData potential user data - if we're up to EDIT user
+ * @returns {HTMLDivElement[]}
+ */
+function createFormElements(userData) {
+  const formElements = formControlsConfig.map((item) => {
+    const inputElem = document.createElement('input');
+    inputElem.id = `user-${item.id}`;
+    inputElem.value = userData[item.id] || '';
+
+    const labelElem = document.createElement('label');
+    labelElem.setAttribute('for', inputElem.id);
+    labelElem.innerText = item.label;
+
+    const errorElem = document.createElement('span');
+    errorElem.classList.add('form-error');
+    errorElem.id = `${inputElem.id}-error`;
+
+    // to conveniently manage input and it's label + error
+    const wrapper = document.createElement('div');
+    wrapper.append(labelElem, inputElem, errorElem);
+
+    return wrapper;
+  });
+
+  return formElements;
+}
 
 /**
  * Creates user edit form
@@ -34,31 +87,12 @@ function getEditUserForm(onSubmit, userData = {}, config = {}) {
     form.setAttribute('data-user-id', userData.id);
   }
 
-  const formControls = formControlsConfig.map((item) => {
-    const inputElem = document.createElement('input');
-    inputElem.id = `user-${item.id}`;
-    inputElem.value = userData[item.id] || '';
+  const formControls = createFormElements(userData);
+  form.addEventListener('input', cleanFieldState);
 
-    const labelElem = document.createElement('label');
-    labelElem.setAttribute('for', inputElem.id);
-    labelElem.innerText = item.label;
-
-    // to conveniently manage input and it's label
-    const wrapper = document.createElement('div');
-    wrapper.append(labelElem, inputElem);
-
-    return wrapper;
-  });
-
-  const errors = document.createElement('div');
-  errors.classList.add('errors');
-  form.insertAdjacentElement('afterend', errors);
-
-  const btn = document.createElement('button');
-  btn.innerText = config.buttonText || CREATE_USER;
-
-
-  btn.addEventListener('click', (event) => {
+  const submitButton = document.createElement('button');
+  submitButton.innerText = config.buttonText || CREATE_USER;
+  submitButton.addEventListener('click', (event) => {
     event.preventDefault();
 
     // we give our callback ref to the Data, not the Form -
@@ -68,23 +102,15 @@ function getEditUserForm(onSubmit, userData = {}, config = {}) {
       return acc;
     }, {});
 
-    // validate fields
-    userSchema.validate(userData, { abortEarly: false })
+    // validate fields, if all is OK - hit API to save user data, if not - show errors
+    userSchema.validate(userData, { abortEarly: false, strict: true })
       .then(onSubmit)
-      .catch(({ errors: err }) => {
-        console.log(err);
-        errors.replaceChildren(...err.map((e) => {
-          const li = document.createElement('div');
-          li.classList.add('validation-message');
-          li.innerText = e;
-          return li;
-        }));
-      });
+      .catch(setErrorState);
   });
 
-  form.append(title, ...formControls, btn);
+  form.append(title, ...formControls, submitButton);
 
   return form;
 }
 
-export default getEditUserForm;
+export { getEditUserForm };

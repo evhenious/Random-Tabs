@@ -1,7 +1,7 @@
 import { Mountable } from './tabs';
 import { userApi as api } from '../helpers/networkHelper';
 import { getModalInstance } from '../helpers/modal';
-import getEditUserForm from '../helpers/userEditForm';
+import { getEditUserForm } from '../helpers/userEditForm';
 
 const editIcon = '&#9998;'; // pencil
 const removeIcon = '&#9760;'; // jolly roger
