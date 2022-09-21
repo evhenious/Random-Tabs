@@ -30,7 +30,11 @@ const contextMenuItems = [
             lastAction();
           });
         };
-        const form = getEditUserForm(onFormSave, userData, { buttonText: 'Save Changes' });
+        const formConfig = {
+          buttonText: 'Save Changes',
+          title: 'Edit User Details'
+        };
+        const form = getEditUserForm(onFormSave, userData, formConfig);
         getModalInstance().showModal(form);
       });
     },

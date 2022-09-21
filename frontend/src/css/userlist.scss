@@ -101,11 +101,19 @@ $context-menu-bg-color: #f5f5f5;
   border-radius: 15px;
   width: 300px;
 
+  .edit-form-title {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
   & > div {
     display: contents;
 
     label {
       font-size: 0.9em;
+      color: #4d4d4d;
     }
 
     input {
@@ -120,6 +128,22 @@ $context-menu-bg-color: #f5f5f5;
 
     &:hover {
       background-color: #cfe6d9;
+    }
+  }
+
+  .errors {
+    display: block;
+    position: absolute;
+
+
+    .validation-message {
+      background-color: #ffff8f;
+      font-size: 1em;
+      padding: 5px 10px;
+
+      &:first-child {
+        margin-top: 15px;
+      }
     }
   }
 }

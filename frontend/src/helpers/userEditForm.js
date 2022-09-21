@@ -1,8 +1,19 @@
+import { divide } from 'lodash';
+import * as yup from 'yup';
+
 const formControlsConfig = [
   { id: 'name', label: 'User Name' },
   { id: 'email', label: 'Email Address' },
   { id: 'phone', label: 'User Tel #' },
 ];
+
+const CREATE_USER = 'Create User';
+
+const userSchema = yup.object().shape({
+  name: yup.string().required('Name cannot be empty'),
+  email: yup.string().email('Invalid email format').required('Email cannot be empty'),
+  phone: yup.string().matches(/(\d| |\+|-|\(|\)|\.)/, { excludeEmptyString: true, message: 'Invalid phone format' })
+});
 
 /**
  * Creates user edit form
@@ -14,6 +25,10 @@ const formControlsConfig = [
 function getEditUserForm(onSubmit, userData = {}, config = {}) {
   const form = document.createElement('form');
   form.classList.add('user-edit-form');
+
+  const title = document.createElement('div');
+  title.classList.add('edit-form-title');
+  title.innerText = config.title || CREATE_USER;
 
   if (userData.id) {
     form.setAttribute('data-user-id', userData.id);
@@ -35,8 +50,14 @@ function getEditUserForm(onSubmit, userData = {}, config = {}) {
     return wrapper;
   });
 
+  const errors = document.createElement('div');
+  errors.classList.add('errors');
+  form.insertAdjacentElement('afterend', errors);
+
   const btn = document.createElement('button');
-  btn.innerText = config.buttonText || 'Create User';
+  btn.innerText = config.buttonText || CREATE_USER;
+
+
   btn.addEventListener('click', (event) => {
     event.preventDefault();
 
@@ -47,10 +68,21 @@ function getEditUserForm(onSubmit, userData = {}, config = {}) {
       return acc;
     }, {});
 
-    onSubmit(userData);
+    // validate fields
+    userSchema.validate(userData, { abortEarly: false })
+      .then(onSubmit)
+      .catch(({ errors: err }) => {
+        console.log(err);
+        errors.replaceChildren(...err.map((e) => {
+          const li = document.createElement('div');
+          li.classList.add('validation-message');
+          li.innerText = e;
+          return li;
+        }));
+      });
   });
 
-  form.append(...formControls, btn);
+  form.append(title, ...formControls, btn);
 
   return form;
 }
