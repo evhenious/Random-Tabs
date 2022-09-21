@@ -1,13 +1,12 @@
 /*
-  This is the separate esbuild config-in-js for running dev server
+  This is the separate esbuild config-in-js for building frontend part on PROD settings
 */
-const { serve } = require('esbuild');
+const { build } = require('esbuild');
 const { sassPlugin }  = require('esbuild-sass-plugin');
 const colors = require('colors');
 colors.enable();
 
-serve(
-  { servedir: './dist' },
+build(
   {
     entryPoints: {
       index: './frontend/src/index.js',
@@ -19,8 +18,9 @@ serve(
     ],
     bundle: true,
     minify: true,
-    sourcemap: true,
+    target: ['esnext'],
+    sourcemap: false,
     outdir: './dist',
     logLevel: 'info',
   }
-).then(() => console.log('[FRONTEND]'.green.bold, 'build successful, waiting on port 8000\n'));
+).then(() => console.log('[FRONTEND PROD]'.green.bold, 'build successful, check [./dist] folder\n'));
