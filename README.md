@@ -4,7 +4,7 @@ Contains three mind-blowing parts (choose your favourite!):
 - the cool paginated picture gallery fetched from [Lorem Picsum](https://picsum.photos/)
 - amazing microblog tab with post-to-localstorage functionality
 - pretty nice account search by username with [JSONPlaceholder](https://jsonplaceholder.typicode.com/) on the backend (try typing `Bret`)
-- userlist table integrated with local backend API (see Postman collection **FSon.postman_collection.json** for API docs)
+- userlist table integrated with local backend API (see Postman collection **_helperDoc/FSon.postman_collection.json** for API docs)
 - aaand fancy red progressbar of scrolled page amount on the top of that luxurious design! ...and Lesson Title :)
 
 ### How to run (for Jedi Knights - requires linux or macos, I was too lazy to adapt used commands for windows):

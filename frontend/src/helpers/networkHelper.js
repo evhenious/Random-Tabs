@@ -101,6 +101,8 @@ function transformImageUrls(img) {
 }
 
 const userApiBase = 'http://localhost:4321/api/users';
+const headers = new Headers();
+headers.set('content-type', 'application/json');
 
 /**
  * Get list of all users
@@ -129,9 +131,7 @@ function deleteUser(userId) {
 function createUser(userData = {}) {
   return fetch(userApiBase, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
+    headers,
     body: JSON.stringify(userData),
   }).then((resp) => resp.json());
 }
@@ -155,9 +155,7 @@ function getUserById(userId) {
 function updateUser(userId, userData) {
   return fetch(`${userApiBase}/${userId}`, {
     method: 'PATCH',
-    headers: {
-      'content-type': 'application/json',
-    },
+    headers,
     body: JSON.stringify(userData),
   });
 }

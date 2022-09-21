@@ -1,18 +1,18 @@
 {
   "name": "fson55_training",
-  "version": "1.0.0",
-  "description": "Test stuff",
+  "version": "2.0.0",
+  "description": "Test stuff with frontend and backend",
   "main": "index.js",
   "engines": {
     "node": "^14.0"
   },
   "scripts": {
-    "copy-assets": "mkdir -p ./dist && cp -r ./images ./dist/images && cp ./static/index.html ./dist/index.html",
-    "build-js": "esbuild ./static/index.js --bundle --minify --outdir=./dist ",
-    "build-css": "esbuild ./static/index.css --bundle --minify --outfile=./dist/index.css",
+    "copy-assets": "mkdir -p ./dist && cp -r ./frontend/static/images ./dist/images && cp ./frontend/src/index.html ./dist/index.html",
+    "build-js": "esbuild ./frontend/src/index.js --bundle --minify --outdir=./dist ",
+    "build-css": "esbuild ./frontend/src/index.css --bundle --minify --outfile=./dist/index.css",
     "build": "npm run copy-assets && npm run build-js && npm run build-css",
     "start-dev": "npm run copy-assets && node ./esbuild-serve-dev & nodemon ./backend/index.js",
-    "start-dev-parcel": "npx parcel ./static/index.html & nodemon ./backend/index.js"
+    "start-dev-parcel": "npx parcel ./frontend/src/index.html & nodemon ./backend/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   "homepage": "https://github.com/evhenious/FSon55_training#readme",
   "devDependencies": {
     "@types/basiclightbox": "^5.0.1",
-    "esbuild": "^0.15.6",
+    "esbuild": "^0.15.8",
     "eslint": "^8.23.1",
     "nodemon": "^2.0.20",
     "parcel": "^2.7.0"
