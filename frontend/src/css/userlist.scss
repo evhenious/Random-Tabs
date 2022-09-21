@@ -60,6 +60,10 @@ $context-menu-bg-color: #f5f5f5;
       border-left: none;
     }
   }
+
+  &:hover .cell {
+    background-color: $light-grey;
+  }
 }
 
 #context-menu {
