@@ -1,0 +1,46 @@
+//! this file contains generic definitions and common things
+
+$dark-grey: #a9a9a9;
+$light-grey: #ddd;
+$lighter-grey: #ccc;
+
+$invalid-red: #bd1313;
+
+body {
+  background-color: #f0f0f0;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 15vh;
+  border-bottom: 1px solid $light-grey;
+}
+
+button {
+  border: 1px solid $lighter-grey;
+  font-size: larger;
+  outline: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  display: block;
+  margin: auto;
+
+  &:hover {
+    background-color: $light-grey;
+  }
+
+  &:active {
+    background-color: $lighter-grey;
+  }
+}
+
+.text-input {
+  flex: 1;
+
+  &.invalid {
+    border: 2px solid $invalid-red;
+    background-color: rgba(189, 19, 19, 0.2);
+  }
+}
