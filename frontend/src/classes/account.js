@@ -1,5 +1,5 @@
 import { getMapIframe } from '../helpers/mapHelper';
-import { getPostsForUser, getAccountByName } from '../helpers/networkHelper';
+import { jsonPlaceholderApi as api } from '../helpers/networkHelper';
 import { Mountable } from './tabs';
 
 const defaultInputPlaceholder = 'Please type your login';
@@ -26,7 +26,7 @@ class Account extends Mountable {
     this.root.append(this.#form, this.#data);
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
 
     const isInputValid = this.validateUsernameInput();
@@ -38,10 +38,10 @@ class Account extends Mountable {
 
     //! fetch user
     const userName = this.#usernameInput.value;
-    getAccountByName(userName)
+    api.getAccountByName(userName)
       // якщо юзер знайдений - пробуєм дістати його пости по юзер айді
       .then(
-        (user) => getPostsForUser(user.id).then((posts) => ({ user, posts }))
+        (user) => api.getPostsForUser(user.id).then((posts) => ({ user, posts }))
       )
       .then(({ user, posts = [] }) => {
         //* show the MAP and some posts!

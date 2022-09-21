@@ -26,6 +26,11 @@ function getPostsForUser(userId) {
   return fetch(`${baseUserApiAddress}/users/${userId}/posts`).then((data) => data.json());
 }
 
+const jsonPlaceholderApi = {
+  getAccountByName,
+  getPostsForUser
+};
+
 /**
  * Fetches images page by page from Lorem Picsum
  *
@@ -171,4 +176,4 @@ const userApi = {
   deleteUser,
 };
 
-export { getAccountByName, getPostsForUser, getImages, userApi };
+export { jsonPlaceholderApi, getImages, userApi };
