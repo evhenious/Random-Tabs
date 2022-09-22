@@ -1,30 +1,36 @@
+import axios from "axios";
+
 const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
 
 /**
  * @param {string} userName
  * @returns {Promise<Object|null>} user data if user found, null otherwise
  */
-function getAccountByName(userName) {
-  return fetch(`${baseUserApiAddress}/users?username=${userName}`)
-    .then((data) => data.json()) // дістаємо наші дані із респонса в форматі JSON
-    .then((data = []) => {
-      // якщо пошук юзера повернув пустий масив - кидаємо помилку "не знайдено"
-      if (!data.length) {
-        throw new Error(`User [${userName}] not found...`);
-      }
+async function getAccountByName(userName) {
+  const resp = await fetch(`${baseUserApiAddress}/users?username=${userName}`);
+  const data = await resp.json();
 
-      const [user = null] = data;
-      return user;
-    });
+  if (!data.length) {
+    throw new Error(`User [${userName}] not found...`);
+  }
+
+  const [user = null] = data;
+  return user;
 }
 
 /**
  * @param {number} userId
  * @returns {Promise<Object[]>} posts of given user
  */
-function getPostsForUser(userId) {
-  return fetch(`${baseUserApiAddress}/users/${userId}/posts`).then((data) => data.json());
+async function getPostsForUser(userId) {
+  const resp = await fetch(`${baseUserApiAddress}/users/${userId}/posts`);
+  return resp.json();
 }
+
+const jsonPlaceholderApi = {
+  getAccountByName,
+  getPostsForUser
+};
 
 /**
  * Fetches images page by page from Lorem Picsum
@@ -36,21 +42,16 @@ function getPostsForUser(userId) {
  *
  * @returns {Promise<{ picturesData: Object[], pageLinks: Object }>}
  */
-function getImages({ limit, url }) {
+async function getImages({ limit, url }) {
   const dataUrl = url || `https://picsum.photos/v2/list?limit=${limit}`;
 
-  return fetch(dataUrl)
-    .then((response) => {
-      // here, we get full URLs to prev and|or next pages from the backend in **link** header
-      // <https://picsum.photos/v2/list?page=1&limit=10>; rel="prev", <https://picsum.photos/v2/list?page=3&limit=10>; rel="next"
-      const pageLinks = parseNavDirections(response.headers.get('link'));
-      return response.json().then((data) => ({ data, pageLinks }));
-    })
-    .then(({ data, pageLinks }) => {
-      const picturesData = data.map(transformImageUrls);
+  const resp = await fetch(dataUrl);
+  const pageLinks = parseNavDirections(resp.headers.get('link'));
 
-      return { picturesData, pageLinks };
-    });
+  const data = await resp.json();
+  const picturesData = data.map(transformImageUrls);
+
+  return { picturesData, pageLinks };
 }
 
 /**
@@ -90,8 +91,8 @@ function parseNavDirections(links) {
  * @returns {{ original: string, preview: string }}
  */
 function transformImageUrls(img) {
-  // here, we use regex to replace original image resolution and create small preview
-  // https://picsum.photos/id/0/ 5616/3744 => https://picsum.photos/id/0/ 330/330
+  //? here, we use regex to replace original image resolution and create small preview
+  //? https://picsum.photos/id/0/ 5616/3744 => https://picsum.photos/id/0/ 330/330
   const preview = img.download_url.replace(/\d{1,4}\/\d{1,4}$/, '330/330');
 
   return {
@@ -100,16 +101,17 @@ function transformImageUrls(img) {
   };
 }
 
-const userApiBase = 'http://localhost:4321/api/users';
-const headers = new Headers();
-headers.set('content-type', 'application/json');
+const apiInstance = axios.create({
+  baseURL: 'http://localhost:4321/api'
+});
 
 /**
  * Get list of all users
  * @returns {Promise<Object[]>}
  */
-function getUsersList() {
-  return fetch(userApiBase).then((resp) => resp.json());
+async function getUsersList() {
+  const { data } = await apiInstance.get('/users');
+  return data;
 }
 
 /**
@@ -118,9 +120,7 @@ function getUsersList() {
  * @returns {Promise}
  */
 function deleteUser(userId) {
-  return fetch(`${userApiBase}/${userId}`, {
-    method: 'DELETE',
-  });
+  return apiInstance.delete(`/users/${userId}`);
 }
 
 /**
@@ -128,12 +128,9 @@ function deleteUser(userId) {
  * @param {Object} userData
  * @returns {Promise}
  */
-function createUser(userData = {}) {
-  return fetch(userApiBase, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(userData),
-  }).then((resp) => resp.json());
+async function createUser(userData = {}) {
+  const { data } = await apiInstance.post('/users', userData);
+  return data;
 }
 
 /**
@@ -141,8 +138,9 @@ function createUser(userData = {}) {
  * @param {string|number} userId
  * @returns {Promise<Object>}
  */
-function getUserById(userId) {
-  return fetch(`${userApiBase}/${userId}`).then((resp) => resp.json());
+async function getUserById(userId) {
+  const { data } = await apiInstance.get(`/users/${userId}`);
+  return data;
 }
 
 /**
@@ -153,11 +151,7 @@ function getUserById(userId) {
  * @returns {Promise}
  */
 function updateUser(userId, userData) {
-  return fetch(`${userApiBase}/${userId}`, {
-    method: 'PATCH',
-    headers,
-    body: JSON.stringify(userData),
-  });
+  return apiInstance.patch(`/users/${userId}`, userData);
 }
 
 /**
@@ -171,4 +165,4 @@ const userApi = {
   deleteUser,
 };
 
-export { getAccountByName, getPostsForUser, getImages, userApi };
+export { jsonPlaceholderApi, getImages, userApi };

@@ -25,7 +25,7 @@ const modalInstance = {
 function getModalInstance() {
   // assuming basicLightbox is available globally
   if (!basicLightbox) {
-    console.warn('basicLightbox is not available');
+    console.error('basicLightbox is not available');
     return null;
   }
 
@@ -42,8 +42,7 @@ function getModalInstance() {
  */
 function showModalImage(src = '/images/empty.png') {
   const image = document.createElement('img');
-  image.setAttribute('width', 640);
-  image.setAttribute('height', 480);
+  image.setAttribute('width', 1024);
   image.src = src;
 
   _setModalContent(image);

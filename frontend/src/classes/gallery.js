@@ -45,14 +45,11 @@ class Gallery extends Mountable {
    *
    * @param {Object} pageParams
    */
-  #loadGalleryPage(pageParams = defaultPageParams) {
-    getImages(pageParams).then((responseData) => {
-      const { picturesData, pageLinks } = responseData;
+  async #loadGalleryPage(pageParams = defaultPageParams) {
+    const { picturesData, pageLinks } = await getImages(pageParams);
 
-      this.root.replaceChildren(...this.#createGalleryImages(picturesData));
-
-      this.#createNavigationButtons(pageLinks);
-    });
+    this.root.replaceChildren(...this.#createGalleryImages(picturesData));
+    this.#createNavigationButtons(pageLinks);
   }
 
   /**
