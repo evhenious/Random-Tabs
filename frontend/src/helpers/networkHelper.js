@@ -41,21 +41,16 @@ const jsonPlaceholderApi = {
  *
  * @returns {Promise<{ picturesData: Object[], pageLinks: Object }>}
  */
-function getImages({ limit, url }) {
+async function getImages({ limit, url }) {
   const dataUrl = url || `https://picsum.photos/v2/list?limit=${limit}`;
 
-  return fetch(dataUrl)
-    .then((response) => {
-      // here, we get full URLs to prev and|or next pages from the backend in **link** header
-      // <https://picsum.photos/v2/list?page=1&limit=10>; rel="prev", <https://picsum.photos/v2/list?page=3&limit=10>; rel="next"
-      const pageLinks = parseNavDirections(response.headers.get('link'));
-      return response.json().then((data) => ({ data, pageLinks }));
-    })
-    .then(({ data, pageLinks }) => {
-      const picturesData = data.map(transformImageUrls);
+  const resp = await fetch(dataUrl);
+  const pageLinks = parseNavDirections(resp.headers.get('link'));
 
-      return { picturesData, pageLinks };
-    });
+  const data = await resp.json();
+  const picturesData = data.map(transformImageUrls);
+
+  return { picturesData, pageLinks };
 }
 
 /**

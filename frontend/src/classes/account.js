@@ -26,7 +26,7 @@ class Account extends Mountable {
     this.root.append(this.#form, this.#data);
   }
 
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
 
     const isInputValid = this.validateUsernameInput();

@@ -34,9 +34,9 @@ const progressBar = new ProgressBar('progress');
 // adding simple tabs to the page
 const tabConfig = [
   { name: 'Art Gallery', item: Gallery, args: [galleryOptions, handleClickOnImage] },
-  { name: 'Microblog', item: Blog },
+  { name: 'Microblog', item: Blog, default: true },
   { name: 'Account Search', item: Account },
-  { name: 'User List', item: UserList, args: [userListConfig], default: true },
+  { name: 'User List', item: UserList, args: [userListConfig] },
 ];
 
 new Tabs('page-tabs', tabConfig);
