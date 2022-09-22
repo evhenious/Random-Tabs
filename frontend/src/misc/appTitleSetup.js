@@ -5,7 +5,7 @@ const CONSOLE_TITLE_STYLES = [
 ].join(';');
 
 /**
- * Minimal common setup for a current lesson page/console
+ * Minimal common setup for title and console
  *
  * @param {string} name lesson name
  * @param {string} consoleDescription

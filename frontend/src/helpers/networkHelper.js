@@ -1,10 +1,12 @@
 import axios from "axios";
+import { parseNavDirections, transformImageUrls } from "./galleryHelper.js";
 
 const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
 
 /**
  * @param {string} userName
  * @returns {Promise<Object|null>} user data if user found, null otherwise
+ * Uses native **fetch()** as example
  */
 async function getAccountByName(userName) {
   const resp = await fetch(`${baseUserApiAddress}/users?username=${userName}`);
@@ -19,6 +21,7 @@ async function getAccountByName(userName) {
 }
 
 /**
+ * Gets some test data from JsonPlaceholder. Uses native **fetch()**
  * @param {number} userId
  * @returns {Promise<Object[]>} posts of given user
  */
@@ -44,61 +47,12 @@ const jsonPlaceholderApi = {
  */
 async function getImages({ limit, url }) {
   const dataUrl = url || `https://picsum.photos/v2/list?limit=${limit}`;
+  const { data, headers } = await axios.get(dataUrl);
 
-  const resp = await fetch(dataUrl);
-  const pageLinks = parseNavDirections(resp.headers.get('link'));
-
-  const data = await resp.json();
+  const pageLinks = parseNavDirections(headers['link']);
   const picturesData = data.map(transformImageUrls);
 
   return { picturesData, pageLinks };
-}
-
-/**
- * Parses link header to separate navigation links
- * @param {string} links
- * @returns {{ prev?: string, next?: string }}
- */
-function parseNavDirections(links) {
-  const linksArray = links.split(',');
-  const pageLinks = {};
-  /*
-    Each link contains URL and direction type (prev or next):
-    <https://picsum.photos/v2/list?page=1&limit=10>; rel="prev"
-    <https://picsum.photos/v2/list?page=3&limit=10>; rel="next"
-  */
-  linksArray.forEach((link) => {
-    // we need to find and cut out DIRECTION (prev | next)
-    const dirStart = link.indexOf('"') + 1;
-    const dirEnd = link.lastIndexOf('"');
-    const direction = link.slice(dirStart, dirEnd);
-
-    // and we need to cut out URL of that direction
-    const urlStart = link.indexOf('<') + 1;
-    const urlEnd = link.indexOf('>');
-    const url = link.slice(urlStart, urlEnd);
-
-    pageLinks[direction] = url;
-  });
-
-  return pageLinks;
-}
-
-/**
- * Transforms image object returned from Lorem Picsum to the format our Gallery expects
- *
- * @param {Object} img
- * @returns {{ original: string, preview: string }}
- */
-function transformImageUrls(img) {
-  //? here, we use regex to replace original image resolution and create small preview
-  //? https://picsum.photos/id/0/ 5616/3744 => https://picsum.photos/id/0/ 330/330
-  const preview = img.download_url.replace(/\d{1,4}\/\d{1,4}$/, '330/330');
-
-  return {
-    original: img.download_url,
-    preview,
-  };
 }
 
 const apiInstance = axios.create({

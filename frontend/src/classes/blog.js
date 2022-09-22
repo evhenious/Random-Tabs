@@ -1,5 +1,4 @@
-import { debounce } from '../helpers/lodashHandmade';
-import { getData, saveData } from '../helpers/storage';
+import { getFromStorage, saveToStorage } from '../helpers/storage';
 import { Mountable } from './tabs';
 
 const defaultInputPlaceholder = 'Enter your notes...';
@@ -43,13 +42,6 @@ class Blog extends Mountable {
       }
     });
 
-    // не даємо виконувати івент хендлер поки не пройде час після останнього виконання
-    const timeToDebaunce = 1000; // 1 second
-    const debouncedFunc = debounce((event) => {
-      console.log(event.target.value);
-    }, timeToDebaunce);
-    this.#text.addEventListener('input', debouncedFunc);
-
     // місце для додавання збережених постів
     this.#content = document.createElement('div');
     this.#postsRoot.append(this.#form, this.#content);
@@ -57,56 +49,52 @@ class Blog extends Mountable {
 
     this.root.append(this.#postsRoot);
 
-    this.#initPostCreator();
-    this.#blogPosts = getData() || [];
+    this.#form.addEventListener('submit', this.#postCreator.bind(this));
 
-    this.#loadPosts();
+    this.#blogPosts = getFromStorage() || [];
+    this.#renderPosts();
   }
 
   /**
-   * Adds for SUBMIT event handler which adds new posts
+   * Adds new post
    */
-  #initPostCreator() {
-    const handleSubmit = (event) => {
-      event.preventDefault();
+  #postCreator(event) {
+    event.preventDefault();
 
-      const isTextValid = this.validateTextInput();
-      if (!isTextValid) {
-        this.#text.placeholder = 'Field cannot be empty';
+    const isTextValid = this.validateTextInput();
+    if (!isTextValid) {
+      this.#text.placeholder = 'Field cannot be empty';
 
-        setTimeout(() => {
-          this.resetTextInputStatus();
-          this.#text.placeholder = defaultInputPlaceholder;
-        }, 3_000);
+      setTimeout(() => {
+        this.resetTextInputStatus();
+        this.#text.placeholder = defaultInputPlaceholder;
+      }, 3_000);
 
-        return;
-      }
+      return;
+    }
 
-      const newPost = {
-        date: this.#date.value,
-        content: this.#text.value,
-      };
-      this.#blogPosts.unshift(newPost);
-      saveData(this.#blogPosts);
-
-      this.#text.value = '';
-      this.#loadPosts();
+    const newPost = {
+      date: this.#date.value,
+      content: this.#text.value,
     };
 
-    this.#form.addEventListener('submit', handleSubmit);
+    this.#blogPosts.unshift(newPost);
+    saveToStorage(this.#blogPosts);
+
+    this.#text.value = '';
+    this.#renderPosts();
   }
 
-  #loadPosts() {
+  #renderPosts() {
     // тут може бути сортування... або ні :)
-    const preparedDivs = this.#blogPosts
-      .map((post) => {
-        const { date, content } = post;
-        const postDiv = document.createElement('div');
-        postDiv.classList.add('post');
-        postDiv.innerText = `${date} - ${content}`;
+    const preparedDivs = this.#blogPosts.map((post) => {
+      const { date, content } = post;
+      const postDiv = document.createElement('div');
+      postDiv.classList.add('post');
+      postDiv.innerText = `${date} - ${content}`;
 
-        return postDiv;
-      });
+      return postDiv;
+    });
 
     this.#content.replaceChildren(...preparedDivs);
   }

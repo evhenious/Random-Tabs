@@ -5,7 +5,7 @@ import { getEditUserForm } from '../helpers/userEditForm';
 
 const ICONS = {
   edit: '&#9998;', // pencil
-  remove: '&#9760;' // jolly roger
+  remove: '&#9760;', // jolly roger
 };
 
 /**
@@ -23,22 +23,18 @@ const contextMenuItems = [
   {
     name: `${ICONS.edit} Edit`,
     // callback Kung-Fu as it is
-    handler: (userId, lastAction) => {
+    handler: async (userId, lastAction) => {
       console.log(`Edit user ${userId}`);
-      api.getUserById(userId).then((userData) => {
-        const onFormSave = (editedUserData) => {
-          api.updateUser(userId, editedUserData).then(() => {
-            getModalInstance().instance.close();
-            lastAction();
-          });
-        };
-        const formConfig = {
-          buttonText: 'Save Changes',
-          title: 'Edit User Details'
-        };
-        const form = getEditUserForm(onFormSave, userData, formConfig);
-        getModalInstance().showModal(form);
-      });
+
+      const onFormSave = async (editedUserData) => {
+        await api.updateUser(userId, editedUserData);
+        getModalInstance().instance.close();
+        lastAction();
+      };
+
+      const userData = await api.getUserById(userId);
+      const form = getEditUserForm(onFormSave, { userData, isEdit: true });
+      getModalInstance().showModal(form);
     },
   },
   {
@@ -138,9 +134,10 @@ class UserList extends Mountable {
    * Re-fetches user list data from API and re-sets tabe rows based on new data
    * @param {boolean} isUpdate FALSE for append, TRUE for replace rows
    */
-  #refreshTableData(isUpdate = false) {
+  async #refreshTableData(isUpdate = false) {
     const method = isUpdate ? 'replaceChildren' : 'append';
-    api.getUsersList().then((data) => this.#tableRows[method](...this.#generateRows(data)));
+    const userList = await api.getUsersList();
+    this.#tableRows[method](...this.#generateRows(userList));
   }
 
   /**

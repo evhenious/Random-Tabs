@@ -1,5 +1,5 @@
-import { getMapIframe } from '../helpers/mapHelper';
 import { jsonPlaceholderApi as api } from '../helpers/networkHelper';
+import { getMapIframe } from '../misc/mapHelper';
 import { Mountable } from './tabs';
 
 const defaultInputPlaceholder = 'Please type your login';
@@ -31,8 +31,8 @@ class Account extends Mountable {
 
     const isInputValid = this.validateUsernameInput();
     if (!isInputValid) {
-      this.setInputValid(false, 'Field cannot be empty');
-      setTimeout(this.setInputValid.bind(this, true), 3_000);
+      this.setInputStatus(false, 'Field cannot be empty');
+      setTimeout(this.setInputStatus.bind(this, true), 3_000);
       return;
     }
 
@@ -42,7 +42,7 @@ class Account extends Mountable {
       const user = await api.getAccountByName(userName);
       const posts = await api.getPostsForUser(user.id);
 
-      const userMap = getMapIframe(user.address.geo);
+      const userLocationMap = getMapIframe(user.address.geo);
 
       const postDivs = posts.map((post) => {
         const div = document.createElement('div');
@@ -51,11 +51,11 @@ class Account extends Mountable {
         return div;
       });
 
-      this.#data.replaceChildren(userMap, ...postDivs);
+      this.#data.replaceChildren(userLocationMap, ...postDivs);
     } catch (err) {
-      this.setInputValid(false, err.message);
+      this.setInputStatus(false, err.message);
+      setTimeout(this.setInputStatus.bind(this, true), 3_000);
       this.#data.innerHTML = '';
-      setTimeout(this.setInputValid.bind(this, true), 3_000);
     }
   }
 
@@ -90,7 +90,7 @@ class Account extends Mountable {
    * @param {boolean} isValid
    * @param {boolean} placeholder
    */
-  setInputValid(isValid = true, placeholder = defaultInputPlaceholder) {
+  setInputStatus(isValid = true, placeholder = defaultInputPlaceholder) {
     let action = 'remove';
     if (!isValid) {
       this.#usernameInput.value = '';

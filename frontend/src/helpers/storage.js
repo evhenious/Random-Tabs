@@ -10,9 +10,9 @@ const storageKey = 'blogPosts';
 
 /**
  * Saves given data, replaces old data with the new
- * @param {Object[]} dataToSave data we need to save
+ * @param {Object|Object[]} dataToSave data we need to save
  */
-function saveData(dataToSave) {
+function saveToStorage(dataToSave) {
   localStorage.setItem(storageKey, JSON.stringify(dataToSave));
 }
 
@@ -20,7 +20,7 @@ function saveData(dataToSave) {
  * Returns all data from the storage
  * @returns {Object} parsed data from storage
  */
-function getData() {
+function getFromStorage() {
   try {
     const data = JSON.parse(localStorage.getItem(storageKey));
     return data;
@@ -37,8 +37,4 @@ function clearData() {
   localStorage.clear();
 }
 
-export {
-  clearData,
-  getData,
-  saveData
-}
+export { clearData, getFromStorage, saveToStorage };
