@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
 
 /**
@@ -89,8 +91,8 @@ function parseNavDirections(links) {
  * @returns {{ original: string, preview: string }}
  */
 function transformImageUrls(img) {
-  // here, we use regex to replace original image resolution and create small preview
-  // https://picsum.photos/id/0/ 5616/3744 => https://picsum.photos/id/0/ 330/330
+  //? here, we use regex to replace original image resolution and create small preview
+  //? https://picsum.photos/id/0/ 5616/3744 => https://picsum.photos/id/0/ 330/330
   const preview = img.download_url.replace(/\d{1,4}\/\d{1,4}$/, '330/330');
 
   return {
@@ -99,16 +101,17 @@ function transformImageUrls(img) {
   };
 }
 
-const userApiBase = 'http://localhost:4321/api/users';
-const headers = new Headers();
-headers.set('content-type', 'application/json');
+const apiInstance = axios.create({
+  baseURL: 'http://localhost:4321/api'
+});
 
 /**
  * Get list of all users
  * @returns {Promise<Object[]>}
  */
-function getUsersList() {
-  return fetch(userApiBase).then((resp) => resp.json());
+async function getUsersList() {
+  const { data } = await apiInstance.get('/users');
+  return data;
 }
 
 /**
@@ -117,9 +120,7 @@ function getUsersList() {
  * @returns {Promise}
  */
 function deleteUser(userId) {
-  return fetch(`${userApiBase}/${userId}`, {
-    method: 'DELETE',
-  });
+  return apiInstance.delete(`/users/${userId}`);
 }
 
 /**
@@ -127,12 +128,9 @@ function deleteUser(userId) {
  * @param {Object} userData
  * @returns {Promise}
  */
-function createUser(userData = {}) {
-  return fetch(userApiBase, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(userData),
-  }).then((resp) => resp.json());
+async function createUser(userData = {}) {
+  const { data } = await apiInstance.post('/users', userData);
+  return data;
 }
 
 /**
@@ -140,8 +138,9 @@ function createUser(userData = {}) {
  * @param {string|number} userId
  * @returns {Promise<Object>}
  */
-function getUserById(userId) {
-  return fetch(`${userApiBase}/${userId}`).then((resp) => resp.json());
+async function getUserById(userId) {
+  const { data } = await apiInstance.get(`/users/${userId}`);
+  return data;
 }
 
 /**
@@ -152,11 +151,7 @@ function getUserById(userId) {
  * @returns {Promise}
  */
 function updateUser(userId, userData) {
-  return fetch(`${userApiBase}/${userId}`, {
-    method: 'PATCH',
-    headers,
-    body: JSON.stringify(userData),
-  });
+  return apiInstance.patch(`/users/${userId}`, userData);
 }
 
 /**
