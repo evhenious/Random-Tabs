@@ -1,5 +1,5 @@
 {
-  "name": "fson55_training",
+  "name": "random-tabs",
   "version": "2.0.0",
   "description": "Test stuff with frontend and backend",
   "main": "index.js",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evhenious/FSon55_training.git"
+    "url": "git+https://github.com/evhenious/Random-Tabs.git"
   },
   "author": "evhenious",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/evhenious/FSon55_training/issues"
+    "url": "https://github.com/evhenious/Random-Tabs/issues"
   },
-  "homepage": "https://github.com/evhenious/FSon55_training#readme",
+  "homepage": "https://github.com/evhenious/Random-Tabs#readme",
   "devDependencies": {
     "@types/basiclightbox": "^5.0.1",
     "esbuild": "^0.15.8",
