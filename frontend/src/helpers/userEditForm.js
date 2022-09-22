@@ -1,12 +1,5 @@
 import * as yup from 'yup';
-
-const formControlsConfig = [
-  { id: 'name', label: 'User Name' },
-  { id: 'email', label: 'Email Address' },
-  { id: 'phone', label: 'User Tel #' },
-];
-
-const CREATE_USER = 'Create User';
+import { userEditFormConfig as config } from '../../appConfig';
 
 const userSchema = yup.object().shape({
   name: yup.string().required('Name cannot be empty'),
@@ -45,7 +38,7 @@ function setErrorState(error) {
  * @returns {HTMLDivElement[]}
  */
 function createFormElements(userData) {
-  const formElements = formControlsConfig.map((item) => {
+  const formElements = config.fields.map((item) => {
     const inputElem = document.createElement('input');
     inputElem.id = `user-${item.id}`;
     inputElem.value = userData[item.id] || '';
@@ -71,17 +64,20 @@ function createFormElements(userData) {
 /**
  * Creates user edit form
  * @param {Function} onSubmit click handler for form button. Will receive userData as parameter
- * @param {Object} userData
- * @param {Object} config
+ * @param {Object} options
+ * @param {Object} options.userData
+ * @param {boolean} [options.isEdit]
  * @returns {HTMLFormElement}
  */
-function getEditUserForm(onSubmit, userData = {}, config = {}) {
+function getEditUserForm(onSubmit, { userData = {}, isEdit = false } = {}) {
+  const currentActionConfig = isEdit ? config._edit : config._create;
+
   const form = document.createElement('form');
   form.classList.add('user-edit-form');
 
   const title = document.createElement('div');
   title.classList.add('edit-form-title');
-  title.innerText = config.title || CREATE_USER;
+  title.innerText = currentActionConfig.title;
 
   if (userData.id) {
     form.setAttribute('data-user-id', userData.id);
@@ -91,21 +87,21 @@ function getEditUserForm(onSubmit, userData = {}, config = {}) {
   form.addEventListener('input', cleanFieldState);
 
   const submitButton = document.createElement('button');
-  submitButton.innerText = config.buttonText || CREATE_USER;
+  submitButton.innerText = currentActionConfig.buttonText;
+
+  //! event listener for SUBMIT button initiates here
   submitButton.addEventListener('click', (event) => {
     event.preventDefault();
 
-    // we give our callback ref to the Data, not the Form -
-    // so form user does not care about the structure of elements
-    const userData = formControlsConfig.reduce((acc, { id }) => {
+    // getting data from the form fields
+    const userData = config.fields.reduce((acc, { id }) => {
       acc[id] = form.elements[`user-${id}`].value;
       return acc;
     }, {});
 
     // validate fields, if all is OK - hit API to save user data, if not - show errors
-    userSchema.validate(userData, { abortEarly: false, strict: true })
-      .then(onSubmit)
-      .catch(setErrorState);
+    //! .validate() passes _userData_ to onSubmit
+    userSchema.validate(userData, { abortEarly: false, strict: true }).then(onSubmit).catch(setErrorState);
   });
 
   form.append(title, ...formControls, submitButton);

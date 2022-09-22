@@ -1,10 +1,6 @@
 import { getImages } from '../helpers/networkHelper';
 import { Mountable } from './tabs';
 
-const defaultPageParams = {
-  limit: 10,
-};
-
 class Gallery extends Mountable {
   static #galleryImageClass = 'gallery-item';
   static #lazyLoadClass = 'lazyload';
@@ -20,11 +16,6 @@ class Gallery extends Mountable {
   constructor(parent, options = {}, imageClickHandler) {
     super(parent, 'gallery');
     this.#options = { ...options };
-
-    // init root element
-    const root = document.createElement('div');
-    root.setAttribute('id', 'gallery');
-    parent.append(root);
 
     this.#buttonRoot = document.createElement('div');
     this.#buttonRoot.classList.add('button-root');
@@ -45,8 +36,8 @@ class Gallery extends Mountable {
    *
    * @param {Object} pageParams
    */
-  async #loadGalleryPage(pageParams = defaultPageParams) {
-    const { picturesData, pageLinks } = await getImages(pageParams);
+  async #loadGalleryPage(pageParams) {
+    const { picturesData, pageLinks } = await getImages(pageParams || this.#options.defaultPageParams);
 
     this.root.replaceChildren(...this.#createGalleryImages(picturesData));
     this.#createNavigationButtons(pageLinks);

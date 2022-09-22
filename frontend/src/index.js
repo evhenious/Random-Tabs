@@ -1,7 +1,7 @@
 import 'lazysizes';
-import { throttle } from './helpers/lodashHandmade';
+import { throttle } from './misc/lodashHandmade';
 
-import { initAppTitle } from './helpers/consoleConfig.js';
+import { initAppTitle } from './misc/appTitleSetup.js';
 
 import Account from './classes/account';
 import Blog from './classes/blog.js';
@@ -10,30 +10,16 @@ import ProgressBar from './classes/progressBar.js';
 import { Tabs } from './classes/tabs';
 import { getModalInstance } from './helpers/modal.js';
 import UserList from './classes/userList';
+import { galleryConfig, userListConfig } from '../appConfig';
 
-initAppTitle('JS - Final Lesson', 'ASYNC - AWAIT. QnA');
+initAppTitle('Random Tabs', 'Mixed functionality, happy times!');
 
 const modalInstance = getModalInstance();
-const galleryOptions = {
-  lazy: true,
-  placeholder: '/images/empty.png',
-};
-
-const userListConfig = {
-  columns: [
-    { id: 'id', title: 'ID' },
-    { id: 'name', title: 'Name' },
-    { id: 'email', title: 'Email' },
-    { id: 'phone', title: 'Tel. #' },
-  ],
-};
-
-// main tab parts
 const progressBar = new ProgressBar('progress');
 
 // adding simple tabs to the page
 const tabConfig = [
-  { name: 'Art Gallery', item: Gallery, args: [galleryOptions, handleClickOnImage] },
+  { name: 'Art Gallery', item: Gallery, args: [galleryConfig, handleClickOnImage] },
   { name: 'Microblog', item: Blog },
   { name: 'Account Search', item: Account },
   { name: 'User List', item: UserList, args: [userListConfig], default: true },
@@ -50,11 +36,10 @@ function handleClickOnImage({ target }) {
 }
 
 // not quicker than once per 120 millis
-const intervalLength = 120; // milliseconds
-const throttledFunc = throttle(() => {
+const throttledSetProgressLength = throttle(() => {
   progressBar.setLength(getProgressLength());
-}, intervalLength);
-window.addEventListener('scroll', throttledFunc);
+}, 120);
+window.addEventListener('scroll', throttledSetProgressLength);
 
 /**
  * Returns scrolled page percentage
