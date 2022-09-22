@@ -1,0 +1,17 @@
+#gallery {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .gallery-item {
+    height: 330px;
+    width: 330px;
+    margin: 5px;
+    object-fit: cover;
+  }
+
+  .button-root {
+    display: flex;
+  }
+}

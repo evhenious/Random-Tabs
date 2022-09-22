@@ -1,7 +1,7 @@
 import 'lazysizes';
 import { throttle } from './helpers/lodashHandmade';
 
-import { initLesson } from './helpers/consoleConfig.js';
+import { initAppTitle } from './helpers/consoleConfig.js';
 
 import Account from './classes/account';
 import Blog from './classes/blog.js';
@@ -11,7 +11,7 @@ import { Tabs } from './classes/tabs';
 import { getModalInstance } from './helpers/modal.js';
 import UserList from './classes/userList';
 
-initLesson('JS Pre-Final Lesson 21', 'CRUD, REST API part 3');
+initAppTitle('JS - Final Lesson', 'ASYNC - AWAIT. QnA');
 
 const modalInstance = getModalInstance();
 const galleryOptions = {

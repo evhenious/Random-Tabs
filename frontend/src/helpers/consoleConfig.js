@@ -10,11 +10,11 @@ const CONSOLE_TITLE_STYLES = [
  * @param {string} name lesson name
  * @param {string} consoleDescription
  */
-function initLesson(name, consoleDescription) {
+function initAppTitle(name, consoleDescription) {
   document.getElementById('main-title').innerText = name;
   console.log(`# %c ${consoleDescription}`, CONSOLE_TITLE_STYLES);
 }
 
 export {
-  initLesson
+  initAppTitle
 };

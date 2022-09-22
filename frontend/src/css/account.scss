@@ -9,11 +9,11 @@
 .user-post {
   margin-bottom: 15px;
 
-  &:first-child {
+  *:first-child {
     font-weight: bold;
   }
 
-  &:last-child {
+  *:last-child {
     font-family: monospace;
   }
 }
