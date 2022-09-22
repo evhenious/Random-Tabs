@@ -4,26 +4,25 @@ const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
  * @param {string} userName
  * @returns {Promise<Object|null>} user data if user found, null otherwise
  */
-function getAccountByName(userName) {
-  return fetch(`${baseUserApiAddress}/users?username=${userName}`)
-    .then((data) => data.json()) // дістаємо наші дані із респонса в форматі JSON
-    .then((data = []) => {
-      // якщо пошук юзера повернув пустий масив - кидаємо помилку "не знайдено"
-      if (!data.length) {
-        throw new Error(`User [${userName}] not found...`);
-      }
+async function getAccountByName(userName) {
+  const resp = await fetch(`${baseUserApiAddress}/users?username=${userName}`);
+  const data = await resp.json();
 
-      const [user = null] = data;
-      return user;
-    });
+  if (!data.length) {
+    throw new Error(`User [${userName}] not found...`);
+  }
+
+  const [user = null] = data;
+  return user;
 }
 
 /**
  * @param {number} userId
  * @returns {Promise<Object[]>} posts of given user
  */
-function getPostsForUser(userId) {
-  return fetch(`${baseUserApiAddress}/users/${userId}/posts`).then((data) => data.json());
+async function getPostsForUser(userId) {
+  const resp = await fetch(`${baseUserApiAddress}/users/${userId}/posts`);
+  return resp.json();
 }
 
 const jsonPlaceholderApi = {
