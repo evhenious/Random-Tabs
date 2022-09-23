@@ -2,6 +2,7 @@ const fields = {
   id: { validate: restrictedField },
   name: { required: true, validate: validateNotEmptyString },
   email: { required: true, validate: validateNotEmptyString },
+  phone: { transform: (val) => val || null }
 };
 
 function restrictedField() {
@@ -36,16 +37,21 @@ function validateNotEmptyString(value) {
  */
 function postUserValidator(req, _res, next) {
   Object.keys(fields).forEach((key) => {
-    const { required, validate } = fields[key];
+    const { required, validate, transform } = fields[key];
 
     if (!(key in req.body)) {
       if (required) throw new Error(`[${key}] field is required`);
       return;
     }
 
-    const error = validate(req.body[key]);
+    const fieldValue = req.body[key];
+    const error = validate?.(fieldValue);
     if (error) {
       throw new Error(`[${key}] ${error}`);
+    }
+
+    if (transform) {
+      req.body[key] = transform(fieldValue);
     }
   });
 
@@ -70,15 +76,20 @@ function patchUserValidator(req, _res, next) {
   }
 
   Object.keys(fields).forEach((key) => {
-    const { validate } = fields[key];
+    const { validate, transform } = fields[key];
 
     if (!(key in req.body)) {
       return;
     }
 
-    const error = validate(req.body[key]);
+    const fieldValue = req.body[key];
+    const error = validate?.(fieldValue);
     if (error) {
       throw new Error(`[${key}] ${error}`);
+    }
+
+    if (transform) {
+      req.body[key] = transform(fieldValue);
     }
   });
 

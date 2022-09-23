@@ -81,7 +81,7 @@ app.delete('/api/users/:id', pathParamValidator, async (req, res, next) => {
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
-  logger.error(err.message);
+  logger.error('Returning error:', err.message);
   res.status(400).send(err.message);
 });
 

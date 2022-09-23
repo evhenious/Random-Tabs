@@ -1,5 +1,5 @@
-import axios from "axios";
-import { parseNavDirections, transformImageUrls } from "./galleryHelper.js";
+import axios, { AxiosError } from 'axios'; // eslint-disable-line
+import { parseNavDirections, transformImageUrls } from './galleryHelper.js';
 
 const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
 
@@ -32,7 +32,7 @@ async function getPostsForUser(userId) {
 
 const jsonPlaceholderApi = {
   getAccountByName,
-  getPostsForUser
+  getPostsForUser,
 };
 
 /**
@@ -56,7 +56,7 @@ async function getImages({ limit, url }) {
 }
 
 const apiInstance = axios.create({
-  baseURL: 'http://localhost:4321/api'
+  baseURL: 'http://localhost:4321/api',
 });
 
 /**
@@ -81,10 +81,15 @@ function deleteUser(userId) {
  * Creates new user
  * @param {Object} userData
  * @returns {Promise}
+ * @throws
  */
 async function createUser(userData = {}) {
-  const { data } = await apiInstance.post('/users', userData);
-  return data;
+  try {
+    const { data } = await apiInstance.post('/users', userData);
+    return data;
+  } catch (err) {
+    generateApiError(err);
+  }
 }
 
 /**
@@ -103,9 +108,29 @@ async function getUserById(userId) {
  * @param {number|string} userId
  * @param {Object} userData
  * @returns {Promise}
+ * @throws
  */
-function updateUser(userId, userData) {
-  return apiInstance.patch(`/users/${userId}`, userData);
+async function updateUser(userId, userData) {
+  try {
+    return await apiInstance.patch(`/users/${userId}`, userData);
+  } catch (err) {
+    generateApiError(err);
+  }
+}
+
+/**
+ * Mini helper to generate new error with convenienf format to consume on form level
+ * @param {AxiosError} err
+ * @throws
+ */
+function generateApiError(err) {
+  const { data: errMessage } = err.response;
+  const errorPath = errMessage.slice(errMessage.indexOf('[') + 1, errMessage.indexOf(']'));
+  const message = errMessage.slice(errMessage.indexOf(']') + 1);
+
+  const apiError = new Error('API error');
+  apiError.inner = [{ path: errorPath || 'api', message }];
+  throw apiError;
 }
 
 /**

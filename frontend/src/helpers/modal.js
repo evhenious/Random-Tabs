@@ -5,7 +5,7 @@ import * as basicLightbox from 'basiclightbox';
 /**
  * @typedef Modal
  * @type {Object}
- * @property {Object} instance the ref to basicLightbox modal itself - just in case we would need it
+ * @property {basicLightbox.BasicLightBox|null} instance the ref to basicLightbox modal itself - just in case we would need it
  * @property {Function} showModalImage the way to show the modal with predefined **image**
  * @property {Function} showModal the way to show the modal with **any** given content
  */

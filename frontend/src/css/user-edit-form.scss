@@ -46,5 +46,9 @@
     font-size: 0.9em;
     color: $invalid-red;
     margin-bottom: 10px;
+
+    &.api-error {
+      font-size: 1.1em;;
+    }
   }
 }
