@@ -1,11 +1,5 @@
-import * as yup from 'yup';
 import { userEditFormConfig as config } from '../../appConfig';
-
-const userSchema = yup.object().shape({
-  name: yup.string().required('Name cannot be empty'),
-  email: yup.string().email('Invalid email format').required('Email cannot be empty'),
-  phone: yup.string().matches(/(\d| |\+|-|\(|\)|\.)/, { excludeEmptyString: true, message: 'Invalid phone format' }),
-});
+import { validateUser } from './userValidator';
 
 /**
  * Cleans up invalid field state
@@ -24,11 +18,12 @@ function cleanFieldState(event) {
  */
 function setErrorState(error) {
   const issues = error.inner.map(({ path, message }) => ({ path, message }));
-  console.warn(issues);
+  console.warn('form validation', issues);
 
   issues.forEach((issue) => {
     document.getElementById(`user-${issue.path}-error`).innerText = issue.message;
-    document.getElementById(`user-${issue.path}`).classList.add('invalid');
+    // optional chaining below because we don't have input for api errors label
+    document.getElementById(`user-${issue.path}`)?.classList.add('invalid');
   });
 }
 
@@ -57,6 +52,15 @@ function createFormElements(userData) {
 
     return wrapper;
   });
+
+  // specific label for errors returned from API,
+  // like 'this email already registered' etc
+  const apiErrorElem = document.createElement('span');
+  apiErrorElem.classList.add('form-error');
+  apiErrorElem.classList.add('api-error');
+  apiErrorElem.id = `user-api-error`;
+
+  formElements.push(apiErrorElem);
 
   return formElements;
 }
@@ -90,7 +94,7 @@ function getEditUserForm(onSubmit, { userData = {}, isEdit = false } = {}) {
   submitButton.innerText = currentActionConfig.buttonText;
 
   //! event listener for SUBMIT button initiates here
-  submitButton.addEventListener('click', (event) => {
+  submitButton.addEventListener('click', async (event) => {
     event.preventDefault();
 
     // getting data from the form fields
@@ -99,9 +103,9 @@ function getEditUserForm(onSubmit, { userData = {}, isEdit = false } = {}) {
       return acc;
     }, {});
 
-    // validate fields, if all is OK - hit API to save user data, if not - show errors
-    //! .validate() passes _userData_ to onSubmit
-    userSchema.validate(userData, { abortEarly: false, strict: true }).then(onSubmit).catch(setErrorState);
+    validateUser(userData)
+      .then(onSubmit)
+      .catch(setErrorState);
   });
 
   form.append(title, ...formControls, submitButton);

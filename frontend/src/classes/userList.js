@@ -118,7 +118,7 @@ class UserList extends Mountable {
       // make new users, not war
       const createUserFn = (userData) => {
         console.warn('create user');
-        api.createUser(userData).then(afterCreate);
+        return api.createUser(userData).then(afterCreate);
       };
 
       const editForm = getEditUserForm(createUserFn);
