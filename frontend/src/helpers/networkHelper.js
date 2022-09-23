@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios'; // eslint-disable-line
 import { parseNavDirections, transformImageUrls } from './galleryHelper.js';
 
 const baseUserApiAddress = 'http://jsonplaceholder.typicode.com';
