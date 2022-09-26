@@ -13,6 +13,8 @@ class MediaCapture extends Mountable {
     super(parent, 'media-capture');
 
     this.#cameraStreamRoot = document.createElement('video');
+    this.#cameraStreamRoot.classList.add('camera-preview');
+    this.#cameraStreamRoot.poster = './images/empty-video-small.jpeg';
     const captureBtn = document.createElement('button');
     captureBtn.innerText = 'Capture Camera';
 
