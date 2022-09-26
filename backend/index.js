@@ -85,6 +85,25 @@ app.use((err, _req, res, _next) => {
   res.status(400).send(err.message);
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logger.log(`Server is listening on port ${port}`);
 });
+
+process.on('SIGTERM', stopServer);
+process.on('SIGINT', stopServer);
+
+function stopServer() {
+  logger.log('SIGTERM signal received. Closing http server...');
+  server.close(async () => {
+    logger.log('Http server closed.');
+
+    try {
+      await dbHelper.disconnect();
+      logger.log('DB connections are down.');
+    } catch (err) {
+      logger.error(err);
+    } finally {
+      process.exit(0);
+    }
+  });
+}

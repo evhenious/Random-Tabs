@@ -70,6 +70,14 @@ class DbHelper {
   }
 
   /**
+   * Closes DB connection
+   * @returns {Promise}
+   */
+  disconnect() {
+    return this.#dbConnection.dispose();
+  }
+
+  /**
    * @param {connect.SQLQuery} query
    */
   async runQuery(query) {
