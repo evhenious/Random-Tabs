@@ -7,7 +7,7 @@
     "node": "^14.0"
   },
   "scripts": {
-    "copy-assets": "mkdir -p ./dist && cp -r ./frontend/static/images ./dist/images && cp ./frontend/src/index.html ./dist/index.html",
+    "copy-assets": "mkdir -p ./dist && cp -r ./frontend/static/ ./dist/ && cp ./frontend/src/index.html ./dist/index.html",
     "build": "npm run copy-assets && node ./esbuild-prod.js",
     "start-dev": "npm run copy-assets && node ./esbuild-serve-dev & nodemon ./backend/index.js",
     "start-dev-parcel": "npx parcel ./frontend/src/index.html & nodemon ./backend/index.js"
