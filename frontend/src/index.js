@@ -1,6 +1,7 @@
 import 'lazysizes';
 import { throttle } from './misc/lodashHandmade';
 
+import { galleryConfig, userListConfig } from '../appConfig';
 import { initAppTitle } from './misc/appTitleSetup.js';
 
 import Account from './classes/account';
@@ -10,7 +11,7 @@ import ProgressBar from './classes/progressBar.js';
 import { Tabs } from './classes/tabs';
 import { getModalInstance } from './helpers/modal.js';
 import UserList from './classes/userList';
-import { galleryConfig, userListConfig } from '../appConfig';
+import MediaCapture from './classes/media';
 
 initAppTitle('Random Tabs', 'Mixed functionality, happy times!');
 
@@ -23,6 +24,7 @@ const tabConfig = [
   { name: 'Microblog', item: Blog },
   { name: 'Account Search', item: Account },
   { name: 'User List', item: UserList, args: [userListConfig], default: true },
+  { name: 'Media Capture', item: MediaCapture },
 ];
 
 new Tabs('page-tabs', tabConfig);
