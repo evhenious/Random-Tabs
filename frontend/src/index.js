@@ -12,8 +12,10 @@ import { Tabs } from './classes/tabs';
 import { getModalInstance } from './helpers/modal.js';
 import UserList from './classes/userList';
 import MediaCapture from './classes/media';
+import { initWebSocket } from './helpers/websocket';
 
 initAppTitle('Random Tabs', 'Mixed functionality, happy times!');
+initWebSocket();
 
 const modalInstance = getModalInstance();
 const progressBar = new ProgressBar('progress');
