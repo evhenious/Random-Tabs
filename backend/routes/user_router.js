@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const userRouter = new Router();
+const userRouter = Router();
 
 const dbHelper = require('../db').getInstance();
 const UserModel = require('../models/user_model');
