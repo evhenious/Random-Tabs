@@ -7,18 +7,23 @@ class UserModel {
 
   /**
    * @param {Object} params
-   * @returns {Promise<Object[]>}
+   * @returns {Promise<{ users: number, total: number }>}
    */
   async getUsers(params) {
     const getUsersQuery = sql`SELECT * from USERS LIMIT ${params.limit} OFFSET ${params.offset};`;
     const countQuery = sql`SELECT COUNT(id) from USERS;`;
 
-    const data = await Promise.allSettled([
-      this.dbHelper.runQuery(getUsersQuery),
-      this.dbHelper.runQuery(countQuery).then((resp) => resp[0]['COUNT(id)'])
+    const resp = {
+      users: [],
+      total: 0
+    };
+
+    await Promise.allSettled([
+      this.dbHelper.runQuery(getUsersQuery).then(({ value }) => resp.users = value),
+      this.dbHelper.runQuery(countQuery).then((data) => resp.total = data[0]['COUNT(id)'])
     ]);
 
-    return data.map(({ value }) => value);
+    return resp;
   }
 
   /**

@@ -1,19 +1,21 @@
-const { Router } = require('express');
+import { Router } from 'express';
+
+import DbHelper from '../db';
+import UserModel from '../models/user_model';
+
+import { queryValidator } from '../utils/query_validator';
+import { pathParamValidator } from '../utils/param_validator';
+import { postUserValidator, patchUserValidator } from '../utils/user_validator';
+
 const userRouter = Router();
-
-const dbHelper = require('../db').getInstance();
-const UserModel = require('../models/user_model');
-const { queryValidator } = require('../utils/query_validator');
-const { pathParamValidator } = require('../utils/param_validator');
-const { postUserValidator, patchUserValidator } = require('../utils/user_validator');
-
-const userModel = new UserModel(dbHelper);
+const dbHelperInstance = DbHelper.getInstance();
+const userModel = new UserModel(dbHelperInstance);
 
 userRouter.get('/', queryValidator, async (req, res, next) => {
   const { query } = req;
 
   try {
-    const [users, total] = await userModel.getUsers(query);
+    const { users, total } = await userModel.getUsers(query);
     res.setHeader('x-total-count', total);
     res.send(users);
   } catch (err) {
@@ -66,6 +68,4 @@ userRouter.delete('/:id', pathParamValidator, async (req, res, next) => {
   }
 });
 
-module.exports = {
-  userRouter,
-};
+export { userRouter };
