@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { logger } from '../utils/logger';
+import { logger } from './logger';
 
 let fileStream: fs.WriteStream | null = null;
 
@@ -10,7 +10,11 @@ interface DataChunk {
 }
 const storageDir = path.join(__dirname, '..', '..', 'streams');
 
-function writeVideoStream({ chunk, isLast }: DataChunk) {
+/**
+ * Writes incoming video stream to a file.
+ * First call initiates a binary file + writable stream, call with `isLast: true` param closes file and stops recording
+ */
+function writeVideoStream({ chunk, isLast = false }: DataChunk) {
   if (!fileStream) {
     const fileName = `stream-${Date.now()}.mp4`;
     fileStream = fs.createWriteStream(path.join(storageDir, fileName), { encoding: 'binary' });

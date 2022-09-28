@@ -10,26 +10,29 @@ const wsConfig: { port: number, options: any } = config.get('webSocket');
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-import colors from 'colors';
-colors.enable();
-
 import dbHelper from './db/index';
 import { userRouter } from './routes/user_router';
-import { writeVideoStream } from './routes/video_router';
+import { writeVideoStream } from './utils/streaming';
 import { logger } from './utils/logger';
 
 const httpServer = createServer(express());
 const webSocketServer = new Server(httpServer, wsConfig.options);
 
+// TODO make this enum common for BE and FE parts?
+enum WS_EVENTS {
+  handshake = 'handshake',
+  videoStream = 'video-stream'
+}
+
 webSocketServer.on('connection', (socket) => {
-  socket.emit('handshake', { isOk: true });
-  socket.on('video-stream', writeVideoStream);
+  socket.emit(WS_EVENTS.handshake, { isOk: true });
+  socket.on(WS_EVENTS.videoStream, writeVideoStream);
 });
 
 app.use(cors());
 app.use(express.json());
 app.use((req, _, next) => {
-  logger.log(req.method, req.path, req.query, req.body);
+  logger.log(req.method, req.path, 'query:', req.query, 'body:', req.body);
   next();
 });
 

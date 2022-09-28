@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { iExtendedRequest, iParsedQuery, iQueryParams } from '../interfaces';
+import { iExtendedRequest, iParsedQuery, QueryParamsValidator } from '../interfaces';
 
 const { logger } = require('./logger');
 
-const allowedQueryParams: iQueryParams = {
+const supportedQueryParams: QueryParamsValidator = {
   limit: { validator: parseNumber, defaultValue: 10 },
   offset: { validator: parseNumber, defaultValue: 0 },
 };
@@ -23,18 +23,18 @@ function parseNumber(val: string | number) {
 
 function queryValidator(req: Request, _res: Response, next: NextFunction) {
   const parsedQuery: iParsedQuery = {
-    limit: allowedQueryParams.limit.defaultValue,
-    offset: allowedQueryParams.offset.defaultValue,
+    limit: supportedQueryParams.limit.defaultValue,
+    offset: supportedQueryParams.offset.defaultValue,
   };
 
   // check supplied params first
   Object.entries(req.query).forEach(([key, val]) => {
-    if (!allowedQueryParams[key]) {
+    if (!supportedQueryParams[key]) {
       logger.warn(`unsupported query param [${key}] skipped`);
       return;
     }
 
-    const { validator, defaultValue } = allowedQueryParams[key];
+    const { validator, defaultValue } = supportedQueryParams[key];
     const { value = defaultValue, error } = validator(val as string);
     if (error) {
       throw new Error(`invalid query param [${key}], ${error}`);

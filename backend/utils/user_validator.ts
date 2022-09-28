@@ -1,19 +1,24 @@
-const fields = {
-  id: { validate: restrictedField },
-  name: { required: true, validate: validateNotEmptyString },
-  email: { required: true, validate: validateNotEmptyString },
-  phone: { transform: (val) => val || null }
+import { NextFunction, Request, Response } from 'express';
+import { UserFieldsValidator } from '../interfaces';
+
+const fields: UserFieldsValidator = {
+  id: { validator: restrictedField },
+  name: { validator: validateNotEmptyString, required: true },
+  email: { validator: validateNotEmptyString, required: true },
+  phone: { transform: (val) => val || null },
 };
 
+/**
+ * Hard stop for param validation. Does not allow a param to be processed
+ */
 function restrictedField() {
   return 'is restricted field, not allowed to send';
 }
 
 /**
- * @param {*} value
- * @returns {string|null}
+ * Makes sure value is non-empty string
  */
-function validateNotEmptyString(value) {
+function validateNotEmptyString(value: string | number): string | null {
   if (typeof value !== 'string') {
     return 'should be a string';
   }
@@ -35,9 +40,9 @@ function validateNotEmptyString(value) {
  * @param {*} _res
  * @param {*} next
  */
-function postUserValidator(req, _res, next) {
-  Object.keys(fields).forEach((key) => {
-    const { required, validate, transform } = fields[key];
+function postUserValidator(req: Request, _res: Response, next: NextFunction) {
+  Object.entries(fields).forEach(([key, value]) => {
+    const { required, validator, transform } = value;
 
     if (!(key in req.body)) {
       if (required) throw new Error(`[${key}] field is required`);
@@ -45,7 +50,7 @@ function postUserValidator(req, _res, next) {
     }
 
     const fieldValue = req.body[key];
-    const error = validate?.(fieldValue);
+    const error = validator?.(fieldValue);
     if (error) {
       throw new Error(`[${key}] ${error}`);
     }
@@ -69,21 +74,21 @@ function postUserValidator(req, _res, next) {
  * @param {*} _res
  * @param {*} next
  */
-function patchUserValidator(req, _res, next) {
+function patchUserValidator(req: Request, _res: Response, next: NextFunction) {
   const patchFields = Object.keys(req.body);
   if (!patchFields.length) {
     throw new Error('user data not provided');
   }
 
-  Object.keys(fields).forEach((key) => {
-    const { validate, transform } = fields[key];
+  Object.entries(fields).forEach(([key, value]) => {
+    const { validator, transform } = value;
 
     if (!(key in req.body)) {
       return;
     }
 
     const fieldValue = req.body[key];
-    const error = validate?.(fieldValue);
+    const error = validator?.(fieldValue);
     if (error) {
       throw new Error(`[${key}] ${error}`);
     }
@@ -96,7 +101,4 @@ function patchUserValidator(req, _res, next) {
   next();
 }
 
-module.exports = {
-  postUserValidator,
-  patchUserValidator,
-};
+export { postUserValidator, patchUserValidator };

@@ -1,12 +1,20 @@
 import { SQLQuery } from '@databases/sqlite';
 import { Request } from 'express';
 
-interface iQueryParams {
-  [key: string]: {
-    validator(value: string | number): { value?: number; error?: string };
+type QueryParamsValidator = {
+  [key in keyof iParsedQuery]: {
+    validator(value: number | string): { value?: number; error?: string };
     defaultValue: number;
   };
-}
+};
+
+type UserFieldsValidator = {
+  [key in keyof iUser]: {
+    required?: boolean;
+    transform?(value: number | string): string | number | null;
+    validator?(value: number | string): string | number | null;
+  };
+};
 
 interface iParsedQuery {
   limit: number;
@@ -29,4 +37,4 @@ interface DatabaseAccess {
   runQuery(query: SQLQuery): Promise<any>;
 }
 
-export { iQueryParams, iExtendedRequest, iParsedQuery, iUser, DatabaseAccess };
+export { QueryParamsValidator, iExtendedRequest, iParsedQuery, iUser, DatabaseAccess, UserFieldsValidator };
