@@ -6,16 +6,17 @@ import UserModel from '../models/user_model';
 import { queryValidator } from '../utils/query_validator';
 import { pathParamValidator } from '../utils/param_validator';
 import { postUserValidator, patchUserValidator } from '../utils/user_validator';
+import { iExtendedRequest } from '../interfaces';
 
 const userRouter = Router();
 const dbHelperInstance = DbHelper.getInstance();
 const userModel = new UserModel(dbHelperInstance);
 
 userRouter.get('/', queryValidator, async (req, res, next) => {
-  const { query } = req;
+  const { parsedQuery } = req as iExtendedRequest;
 
   try {
-    const { users, total } = await userModel.getUsers(query);
+    const { users, total } = await userModel.getUsers(parsedQuery);
     res.setHeader('x-total-count', total);
     res.send(users);
   } catch (err) {

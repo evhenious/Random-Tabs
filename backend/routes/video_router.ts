@@ -6,7 +6,7 @@ let fileStream: fs.WriteStream | null = null;
 
 interface DataChunk {
   chunk: Blob;
-  isLast: boolean
+  isLast: boolean;
 }
 const storageDir = path.join(__dirname, '..', '..', 'streams');
 
@@ -23,8 +23,6 @@ function writeVideoStream({ chunk, isLast }: DataChunk) {
     logger.log('stopping stream recording...');
     fileStream.end();
   }
-};
-
-export {
-  writeVideoStream
 }
+
+export { writeVideoStream };
