@@ -1,11 +1,11 @@
 import cors from 'cors';
+import config from 'config';
 import express, { NextFunction, Request, Response } from 'express';
 
 const app = express();
 
-//! fixme: env?
-const port = 4321;
-const wsPort = 3210;
+const port: number = config.get('restApi.port');
+const wsConfig: { port: number, options: any } = config.get('webSocket');
 
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -19,12 +19,7 @@ import { writeVideoStream } from './routes/video_router';
 import { logger } from './utils/logger';
 
 const httpServer = createServer(express());
-//! fixme: config
-const webSocketServer = new Server(httpServer, {
-  cors: {
-    origin: '*',
-  },
-});
+const webSocketServer = new Server(httpServer, wsConfig.options);
 
 webSocketServer.on('connection', (socket) => {
   socket.emit('handshake', { isOk: true });
@@ -48,8 +43,8 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 // start all servers
-httpServer.listen(wsPort, () => {
-  logger.log(`WebSocket Server is listening on port ${wsPort}`);
+httpServer.listen(wsConfig.port, () => {
+  logger.log(`WebSocket Server is listening on port ${wsConfig.port}`);
 });
 
 const server = app.listen(port, () => {
