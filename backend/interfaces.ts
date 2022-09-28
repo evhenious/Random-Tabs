@@ -19,9 +19,9 @@ interface iExtendedRequest extends Request {
 }
 
 interface iUser {
-  id?: number | string;
-  name?: string;
-  email?: string;
+  id: number | string;
+  name: string;
+  email: string;
   phone?: string | null;
 }
 

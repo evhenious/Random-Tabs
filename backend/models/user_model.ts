@@ -33,7 +33,7 @@ class UserModel {
   /**
    * Find user(s) by given criteria
    */
-  findUsersBy(userData: iUser) {
+  findUsersBy(userData: Partial<iUser>) {
     const conditions = Object.entries(userData).map(([key, val]) => sql`${sql.ident(key)} = ${val}`);
     const query = sql`SELECT * FROM USERS WHERE (${sql.join(conditions, ') AND (')});`;
 
@@ -58,7 +58,7 @@ class UserModel {
   /**
    * Updates existing user data
    */
-  async updateUser(id: string, userData: iUser) {
+  async updateUser(id: string, userData: Partial<iUser>) {
     const [user] = await this.findUsersBy({ id });
     if (!user) {
       throw new Error(`user with id [${id}] not found`);
@@ -67,7 +67,7 @@ class UserModel {
     const conditions = Object.entries(userData).map(([key, val]) => sql`${sql.ident(key)} = ${val}`);
     const query = sql`UPDATE USERS set ${sql.join(conditions, ', ')} WHERE id = ${id};`;
 
-    return this.dbHelper.runQuery(query) as iUser;
+    return this.dbHelper.runQuery(query) as unknown as iUser;
   }
 
   /**
