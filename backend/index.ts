@@ -13,7 +13,7 @@ import { Server } from 'socket.io';
 import colors from 'colors';
 colors.enable();
 
-import dbHelper from './db';
+import dbHelper from './db/index';
 import { userRouter } from './routes/user_router';
 import { writeVideoStream } from './routes/video_router';
 import { logger } from './utils/logger';

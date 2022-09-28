@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import DbHelper from '../db';
+import DbHelper from '../db/index';
 import UserModel from '../models/user_model';
 
 import { queryValidator } from '../utils/query_validator';
