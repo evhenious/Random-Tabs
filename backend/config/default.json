@@ -1,0 +1,13 @@
+{
+  "restApi": {
+    "port": 4321
+  },
+  "webSocket": {
+    "port": 3210,
+    "options": {
+      "cors": {
+        "origin": "*"
+      }
+    }
+  }
+}

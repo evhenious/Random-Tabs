@@ -1,21 +1,30 @@
-const fs = require('fs');
-const { opendir } = require('fs/promises');
-const path = require('path');
-const connect = require('@databases/sqlite');
-const { sql } = require('@databases/sqlite');
-const { logger } = require('../utils/logger');
+import { DatabaseAccess } from '../interfaces';
+
+import connect, { sql, SQLQuery } from '@databases/sqlite';
+import fs from 'fs';
+import { opendir } from 'fs/promises';
+import path from 'path';
+
+import { logger } from '../utils/logger';
 
 const dbFileName = 'database.db';
 
-const messages = {
+type dbMessages = {
+  _default: string;
+  [key: string]: string;
+};
+
+const messages: dbMessages = {
   _default: 'server error',
   'NOT NULL constraint failed': 'field cannot be empty',
   'UNIQUE constraint failed': 'already registered in the system',
-  'no such column': 'field is not supported'
+  'no such column': 'field is not supported',
 };
 
-class DbHelper {
-  #dbConnection;
+class DbHelper implements DatabaseAccess {
+  private static dbHelper: DbHelper;
+
+  private dbConnection;
 
   /**
    * Initializer for a singleton, use this as THE **main** entry point to get the instance
@@ -32,7 +41,7 @@ class DbHelper {
   /**
    * If you want a singletion - don't call this one manually, use static **getInstance**
    */
-  constructor() {
+  private constructor() {
     const filePath = path.join(__dirname, dbFileName);
 
     let isNewDb = true;
@@ -41,7 +50,7 @@ class DbHelper {
       isNewDb = false;
     }
 
-    this.#dbConnection = connect(filePath);
+    this.dbConnection = connect(filePath);
 
     if (isNewDb) {
       logger.log('database not found, initializing...');
@@ -60,7 +69,7 @@ class DbHelper {
       for await (const entry of dir) {
         if (entry.isFile()) {
           const sqlCommand = sql.file(path.join(migrationsDir, entry.name));
-          await this.#dbConnection.query(sqlCommand);
+          await this.dbConnection.query(sqlCommand);
           logger.log(`[${entry.name}] migration ran OK`);
         }
       }
@@ -70,23 +79,29 @@ class DbHelper {
   }
 
   /**
-   * @param {connect.SQLQuery} query
+   * Closes DB connection
    */
-  async runQuery(query) {
+  disconnect() {
+    return this.dbConnection.dispose();
+  }
+
+  /**
+   * Runs prepared SQLQuery against the db.
+   * Will log any db errors and throw more readable versions
+   */
+  async runQuery(query: SQLQuery) {
     try {
-      return await this.#dbConnection.query(query);
+      return await this.dbConnection.query(query);
     } catch (err) {
-      logger.error(err.message);
-      throw new Error(this.#parseDbError(err));
+      logger.error((err as Error).message);
+      throw new Error(this.#parseDbError(err as Error));
     }
   }
 
   /**
    * Parses DB errors and transforms into something readable and useable
-   * @param {Error} err
-   * @returns {string}
    */
-  #parseDbError(err) {
+  #parseDbError(err: Error) {
     const [type, description, cause] = err.message.split(':');
 
     const fieldName = type === 'SQLITE_ERROR' ? cause : cause?.split('.')[1];
@@ -95,4 +110,4 @@ class DbHelper {
   }
 }
 
-module.exports = DbHelper;
+export default DbHelper;
