@@ -7,6 +7,8 @@
  * @property {[]} [args]
  */
 
+import { saveToStorage } from "../helpers/storage";
+
 /**
  * Class responsible for rendering tab group on the page.
  */
@@ -23,6 +25,7 @@ class Tabs {
       const btn = document.createElement('button');
       btn.innerText = tab.name;
       btn.setAttribute('data-id', index);
+      btn.setAttribute('data-name', tab.name);
       btn.classList.add('tablinks');
 
       if (tab.default) {
@@ -31,11 +34,12 @@ class Tabs {
       return btn;
     });
 
-    this.#tabContents = tabsConfig.map(({ item, args = [] }, index) => {
+    this.#tabContents = tabsConfig.map(({ item: TabContentItem, args = [] }, index) => {
       const tabItem = document.createElement('div');
       tabItem.setAttribute('id', index);
       tabItem.classList.add('tabcontent');
-      new item(tabItem, ...args);
+
+      new TabContentItem(tabItem, ...args);
       return tabItem;
     });
 
@@ -51,6 +55,9 @@ class Tabs {
     tabButtonRoot.querySelectorAll('button.default-active')[0]?.click();
   }
 
+  /**
+   * @param {MouseEvent} event
+   */
   #selectTab(event) {
     if (!event.target.classList.contains('tablinks')) {
       return;
@@ -62,8 +69,10 @@ class Tabs {
 
     this.#tabContents.forEach((element) => (element.style.display = 'none'));
 
-    const { id: tabId } = event.target.dataset;
+    const { id: tabId, name: tabName } = event.target.dataset;
     this.#tabContents.find((div) => div.id === tabId).style.display = 'block';
+
+    saveToStorage('lastTab', tabName);
   }
 }
 

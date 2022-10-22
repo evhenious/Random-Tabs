@@ -32,7 +32,7 @@ const tabConfig = [
   { name: 'Media Capture', item: MediaCapture },
 ];
 
-new Tabs('page-tabs', tabConfig.map((tab) => tab.name === lastUsedTab));
+new Tabs('page-tabs', tabConfig.map((tab) => ({ ...tab, default: tab.name === lastUsedTab })));
 
 /**
  * Shows modal with our selected image
