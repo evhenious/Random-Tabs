@@ -13,6 +13,7 @@ import { getModalInstance } from './helpers/modal.js';
 import UserList from './classes/userList';
 import MediaCapture from './classes/media';
 import { initWebSocket } from './helpers/websocket';
+import { getFromStorage } from './helpers/storage';
 
 initAppTitle('Random Tabs', 'Mixed functionality, happy times!');
 initWebSocket();
@@ -20,16 +21,18 @@ initWebSocket();
 const modalInstance = getModalInstance();
 const progressBar = new ProgressBar('progress');
 
+const lastUsedTab = getFromStorage('lastTab') || 'User List';
+
 // adding simple tabs to the page
 const tabConfig = [
   { name: 'Art Gallery', item: Gallery, args: [galleryConfig, handleClickOnImage] },
   { name: 'Microblog', item: Blog },
   { name: 'Account Search', item: Account },
-  { name: 'User List', item: UserList, args: [userListConfig], default: true },
+  { name: 'User List', item: UserList, args: [userListConfig] },
   { name: 'Media Capture', item: MediaCapture },
 ];
 
-new Tabs('page-tabs', tabConfig);
+new Tabs('page-tabs', tabConfig.map((tab) => ({ ...tab, default: tab.name === lastUsedTab })));
 
 /**
  * Shows modal with our selected image

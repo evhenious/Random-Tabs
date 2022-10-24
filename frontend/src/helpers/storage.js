@@ -1,5 +1,3 @@
-const storageKey = 'blogPosts';
-
 /*
   Ми спеціально відокремили роботу з localStorage в окремий модуль,
   щоб сховати привязку до конкретного способу зберігання даних.
@@ -10,19 +8,21 @@ const storageKey = 'blogPosts';
 
 /**
  * Saves given data, replaces old data with the new
+ * @param {string} key
  * @param {Object|Object[]} dataToSave data we need to save
  */
-function saveToStorage(dataToSave) {
-  localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+function saveToStorage(key, dataToSave) {
+  localStorage.setItem(key, JSON.stringify(dataToSave));
 }
 
 /**
  * Returns all data from the storage
+ * @param {string} key
  * @returns {Object} parsed data from storage
  */
-function getFromStorage() {
+function getFromStorage(key) {
   try {
-    const data = JSON.parse(localStorage.getItem(storageKey));
+    const data = JSON.parse(localStorage.getItem(key));
     return data;
   } catch (err) {
     console.warn('Cannot parse JSON from localStorage');

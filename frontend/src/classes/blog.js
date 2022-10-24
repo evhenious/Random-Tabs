@@ -2,6 +2,7 @@ import { getFromStorage, saveToStorage } from '../helpers/storage';
 import { Mountable } from './tabs';
 
 const defaultInputPlaceholder = 'Enter your notes...';
+const storageKeyBlogPosts = 'blogPosts';
 
 class Blog extends Mountable {
   #postsRoot;
@@ -51,7 +52,7 @@ class Blog extends Mountable {
 
     this.#form.addEventListener('submit', this.#postCreator.bind(this));
 
-    this.#blogPosts = getFromStorage() || [];
+    this.#blogPosts = getFromStorage(storageKeyBlogPosts) || [];
     this.#renderPosts();
   }
 
@@ -79,7 +80,7 @@ class Blog extends Mountable {
     };
 
     this.#blogPosts.unshift(newPost);
-    saveToStorage(this.#blogPosts);
+    saveToStorage(storageKeyBlogPosts, this.#blogPosts);
 
     this.#text.value = '';
     this.#renderPosts();
